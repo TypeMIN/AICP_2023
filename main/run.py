@@ -4,6 +4,7 @@ import os
 import time
 import sys
 import algorithm.abcore
+import algorithm.coclustMod
 import reader
 import measure
 
@@ -21,6 +22,8 @@ def get_user_param(args_set, _alg):
     if _alg == 'abcore':
         ret['a'] = args_set.a
         ret['b'] = args_set.b
+    if _alg == 'coclustmod':
+        ret['n'] = args_set.n
 
     return ret
 
@@ -33,10 +36,12 @@ parser.add_argument('--a', type=int, default=3,
 parser.add_argument('--b', type=int, default=3,
                     help='user parameter for abcore')
 
+parser.add_argument('--n', type=int, default=3, help='user parameter for coclust')
+
 parser.add_argument('--network', default="../dataset/alphabeta_sample.txt",
                     help='a folder name containing network.dat')
 
-parser.add_argument('--algorithm', default="abcore",
+parser.add_argument('--algorithm', default="coclustmod",
                     help='specify algorithm name')
 
 args = parser.parse_args()
@@ -70,6 +75,8 @@ start_time = time.time()
 
 if args.algorithm == 'abcore':
     C =  algorithm.abcore.run(G, args.a, args.b)
+elif args.algorithm == "coclustmod":
+    C = algorithm.coclustMod.run(G, args.n)
 
 run_time = time.time() - start_time
 
