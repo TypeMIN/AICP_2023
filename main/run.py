@@ -45,7 +45,7 @@ parser.add_argument('--a', type=int, default=3,
 parser.add_argument('--b', type=int, default=3,
                     help='user parameter for abcore')
 
-parser.add_argument('--k', type=int, default=3, help='user parameter for ktip or kwing')
+parser.add_argument('--k', type=int, default=2, help='user parameter for ktip or kwing')
 
 parser.add_argument('--network', default="../dataset/alphabeta_sample.txt",
                     help='a folder name containing network.dat')

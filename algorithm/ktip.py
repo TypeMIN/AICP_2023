@@ -11,9 +11,10 @@ def D2(u, G):
     for neighbor1 in d1:
         d2 = G.neighbors(neighbor1)
         for neighbor2 in d2:
-            c[neighbor2] += 1
-            if neighbor2 not in D:
-                D.append(neighbor2)
+            if neighbor2 is not u:
+                c[neighbor2] += 1
+                if neighbor2 not in D:
+                    D.append(neighbor2)
     return c, D
 
 def run(G_, k):
@@ -44,16 +45,20 @@ def run(G_, k):
 
     remover = set()
     for key, value in T.items():
-        print(key, value)
         if value < k:
             remover.add(key)
+            G.remove_node(key)
     U = U - remover
 
     connected_nodes = set()
     for u in U:
         connected_nodes.update(G.neighbors(u))
+
+    remover = set()
     for v in I:
         if v not in connected_nodes:
+            remover.add(v)
             G.remove_node(v)
+    I = I - remover
 
     return nx.connected_components(G)
