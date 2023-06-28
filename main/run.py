@@ -3,11 +3,15 @@ import networkx as nx
 import os
 import time
 import sys
+import reader
+import measure
+
 sys.path.append("..")
 
 import algorithm.abcore
-import reader
-import measure
+import algorithm.ktip
+import algorithm.kwing
+
 
 sys.setrecursionlimit(10000)
 
@@ -23,8 +27,12 @@ def get_user_param(args_set, _alg):
     if _alg == 'abcore':
         ret['a'] = args_set.a
         ret['b'] = args_set.b
-    elif _alg == 'coclustmod':
-        ret['n'] = args_set.n
+
+    elif _alg == 'ktip':
+        ret['k'] = args_set.k
+
+    elif _alg == 'kwing':
+        ret['k'] = args_set.k
 
     return ret
 
@@ -32,12 +40,12 @@ def get_user_param(args_set, _alg):
 #############################################################################
 parser = argparse.ArgumentParser(description='value k')
 parser.add_argument('--a', type=int, default=3,
-                    help='user parameter a for abcore')
+                    help='user parameter for abcore')
 
 parser.add_argument('--b', type=int, default=3,
                     help='user parameter for abcore')
 
-parser.add_argument('--n', type=int, default=4, help='user parameter n for coclustmod')
+parser.add_argument('--k', type=int, default=3, help='user parameter for ktip or kwing')
 
 parser.add_argument('--network', default="../dataset/alphabeta_sample.txt",
                     help='a folder name containing network.dat')
@@ -76,8 +84,13 @@ start_time = time.time()
 
 if args.algorithm == 'abcore':
     C =  algorithm.abcore.run(G, args.a, args.b)
-elif args.algorithm == 'coclustmod':
-    C =  algorithm.coclustMod.run(G, args.n)
+
+elif args.algorithm == 'ktip':
+    C = algorithm.ktip.run(G, args.k)
+
+elif args.algorithm == 'kwing':
+    C = algorithm.kwing.run(G, args.k)
+
 
 run_time = time.time() - start_time
 
