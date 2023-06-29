@@ -9,7 +9,7 @@ import measure
 sys.path.append("..")
 
 import algorithm.abcore
-import algorithm.ktip
+import algorithm.ktip_minsik
 import algorithm.kwing
 
 

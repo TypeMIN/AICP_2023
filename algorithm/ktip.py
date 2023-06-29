@@ -1,64 +1,79 @@
+import math
 import networkx as nx
 from networkx.algorithms import bipartite
-from collections import defaultdict
-import math
 
-def D2(u, G):
-    D = []
-    c = defaultdict(int)
+def find_nodes_at_distance_2(node, graph):
+  """
+  combine the distance is 2 neighbor nodes and counts of unique items
+  :param node: vertex
+  :param graph:  bipartite graph
+  :return:  counts of unique items, combine dist-2 neigs
+  """
+  distance_2_nodes = []
+  counts = {}
+  # 주어진 노드로부터 거리가 1인 이웃 노드 찾기
+  for neighbor in graph.neighbors(node):
+  # 각 이웃 노드로부터 거리가 1인 이웃 노드 찾기 (즉, 원래 노드로부터 거리가 2인 노드 찾기)
+    for neighbor_2 in graph.neighbors(neighbor):
+        # 원래 노드와 거리가 2인 이웃 노드는 서로 다른 bipartite set에 속해야 한다.
+        distance_2_nodes.append(neighbor_2)
+  # 본인 제거
+  distance_2_nodes = [i for i in distance_2_nodes if i != node]
+  # counts of unique items
+  for i in distance_2_nodes:
+    if i in counts:
+      counts[i] +=1
+    else:
+      counts[i] = 1
+  result = list(set(distance_2_nodes))
+  return counts, result
 
-    d1 = G.neighbors(u)
-    for neighbor1 in d1:
-        d2 = G.neighbors(neighbor1)
-        for neighbor2 in d2:
-            if neighbor2 is not u:
-                c[neighbor2] += 1
-                if neighbor2 not in D:
-                    D.append(neighbor2)
-    return c, D
+def  run(G, k):
+  """
+  find the number of butterflies each vertex u in U participates
+  :param U: list of each vertex
+  :param G: bipartite Graph
+  :return: the dictionary that is the number of butterflies each vertex
+  """
+  I,U = bipartite.sets(G)
+  D = []
+  betas = {}
+  c= {}
+  theta = {}
+  for u in U:
+    c, D = find_nodes_at_distance_2(u, G)
+    for d in D:
+      if u in betas:
+        betas[u] += math.comb(c[d], 2)
+      else:
+        betas[u] = math.comb(c[d], 2)
+  for u in U:
+    theta[u] = betas[u]
+    c, D = find_nodes_at_distance_2(u, G)
+    for d in D:
+      if betas[d] == 0:
+        continue
+      if (betas[d] - math.comb(c[d], 2) ) < betas[u]:
+        betas[d] = betas[u]
+      else:
+        betas[d] -= math.comb(c[d], 2)
 
-def run(G_, k):
-    G = G_.copy()
+  remover = set()
+  for key, value in theta.items():
+    if value < k:
+      remover.add(key)
+      G.remove_node(key)
+  U = U - remover
 
-    I, U = bipartite.sets(G)
-    B = defaultdict(int)
-    T = defaultdict(int)
+  connected_nodes = set()
+  for u in U:
+    print(u)
+    connected_nodes.update(G.neighbors(u))
 
-    for u in U:
-        c, D = D2(u, G)
-        bnum = 0
-        for count in c.values():
-            bnum += math.comb(count, 2)
-        B[u] = bnum
-
-    for _ in range(len(B)):
-        u = min(B, key=lambda k: B[k])
-        T[u] = B[u]
-        c, D = D2(u, G)
-        for d in D:
-            if d not in T:
-                if B[d] - math.comb(c[d], 2) < B[u]:
-                    B[d] = B[u]
-                else:
-                    B[d] = B[d] - math.comb(c[d], 2)
-        del B[u]
-
-    remover = set()
-    for key, value in T.items():
-        if value < k:
-            remover.add(key)
-            G.remove_node(key)
-    U = U - remover
-
-    connected_nodes = set()
-    for u in U:
-        connected_nodes.update(G.neighbors(u))
-
-    remover = set()
-    for v in I:
-        if v not in connected_nodes:
-            remover.add(v)
-            G.remove_node(v)
-    I = I - remover
-
-    return nx.connected_components(G)
+  remover = set()
+  for v in I:
+    if v not in connected_nodes:
+      remover.add(v)
+      G.remove_node(v)
+  I = I - remover
+  return nx.connected_components(G)
