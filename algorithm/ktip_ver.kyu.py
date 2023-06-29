@@ -1,5 +1,6 @@
 import math
 import networkx as nx
+from networkx.algorithms import bipartite
 
 def find_nodes_at_distance_2(node, graph):
   """
@@ -27,13 +28,14 @@ def find_nodes_at_distance_2(node, graph):
   result = list(set(distance_2_nodes))
   return counts, result
 
-def  tip(U,G):
+def  tip(G, k):
   """
   find the number of butterflies each vertex u in U participates
   :param U: list of each vertex
   :param G: bipartite Graph
   :return: the dictionary that is the number of butterflies each vertex
   """
+  I,U = bipartite.sets(G)
   D = []
   betas = {}
   c= {}
@@ -55,13 +57,32 @@ def  tip(U,G):
         betas[d] = betas[u]
       else:
         betas[d] -= math.comb(c[d], 2)
-  return theta
+
+  remover = set()
+  for key, value in theta.items():
+    if value < k:
+      remover.add(key)
+      G.remove_node(key)
+  U = U - remover
+
+  connected_nodes = set()
+  for u in U:
+    print(u)
+    connected_nodes.update(G.neighbors(u))
+
+  remover = set()
+  for v in I:
+    if v not in connected_nodes:
+      remover.add(v)
+      G.remove_node(v)
+  I = I - remover
+  return nx.connected_components(G)
 
 if __name__=="__main__":
   B = nx.Graph()
   B.add_nodes_from([1,2,3,4,5,6], bipartite = 0)
   B.add_nodes_from(["a", "b", "c", "d", "e", "f", "g"], bipartite = 1)
   B.add_edges_from([(1,"a"), (1, "b"), (1, "c"), (2, "a"), (2, "b"), (2, "c"), (3, "c"), (3,"d"), (4, "c"), (4, "d"), (5, "d"), (5, "e"), (5, "f"), (6, "d"), (6, "e"), (6, "f"), (6, "g")])
-  node = ["a", "b", "c", "d", "e", "f", "g"]
 
-  print(f"result of tip decomposition: {tip(node, B)}")
+  print(f"result of tip decomposition: {sorted(tip(B, 2))}")
+  #[{1, 2, 'c', 3, 4, 5, 6, 'd', 'a', 'b', 'f', 'e'}]
