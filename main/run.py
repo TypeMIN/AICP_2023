@@ -12,6 +12,8 @@ import algorithm.abcore
 import algorithm.ktip
 import algorithm.kwing
 import algorithm.bitruss
+import algorithm.bine
+import algorithm.deepcc
 
 
 sys.setrecursionlimit(10000)
@@ -97,6 +99,16 @@ elif args.algorithm == 'kwing':
 
 elif args.algorithm == 'bitruss':
     C = algorithm.bitruss.run(G, args.k)
+
+elif args.algorithm == 'bine':
+    # C = algorithm.bine.run()
+    C = nx.connected_components(G)
+    algorithm.bine.run()
+
+elif args.algorithm == 'deepcc':
+    # C = algorithm.deepcc.run()
+    C = nx.connected_components(G)
+    algorithm.deepcc.run()
 
 run_time = time.time() - start_time
 
