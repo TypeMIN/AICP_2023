@@ -12,6 +12,7 @@ import algorithm.abcore
 import algorithm.ktip
 import algorithm.kwing
 import algorithm.bitruss
+import algorithm.biplex
 
 
 sys.setrecursionlimit(10000)
@@ -38,6 +39,10 @@ def get_user_param(args_set, _alg):
     elif _alg == 'bitruss':
         ret['k'] = args_set.k
 
+    elif _alg == 'biplex':
+        ret['k'] = args_set.k
+        ret['t'] = args_set.t
+
     return ret
 
 
@@ -50,6 +55,8 @@ parser.add_argument('--b', type=int, default=3,
                     help='user parameter for abcore')
 
 parser.add_argument('--k', type=int, default=2, help='user parameter for ktip, kwing or bitruss')
+
+parser.add_argument('--t', type=int, default=1, help='user parameter for k-biplex')
 
 parser.add_argument('--network', default="../dataset/alphabeta_sample.txt",
                     help='a folder name containing network.dat')
@@ -97,6 +104,9 @@ elif args.algorithm == 'kwing':
 
 elif args.algorithm == 'bitruss':
     C = algorithm.bitruss.run(G, args.k)
+
+elif args.algorithm == 'biplex':
+    C = algorithm.biplex.run(G, args.k, args.t)
 
 run_time = time.time() - start_time
 
