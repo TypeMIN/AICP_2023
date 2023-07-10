@@ -2,44 +2,42 @@ import networkx as nx
 from itertools import combinations
 
 def iMB_Basic(G, k, t, X, N_X, cand_p, cand_q):
-    print(N_X)
-    print(cand_p)
 
-    # new_N_X = set()
-    # new_cand_p = set()
-    # new_cand_q = set()
+    while(len(cand_p) != 0):
+        u = cand_p[0]
+        expand = True
 
-    for u in cand_p:
         new_X = X.union({u})
         cand_p.remove(u)
-        # new_N_X =
+        new_N_X = {v for v in N_X if G.degree(v) >= (len(cand_p) - k)}
+        new_cand_p = cand_p
+        # Apply the early stop strategy (Lemma 2) 만약 cand_q 에 있는 u에 대해서 N_X가 u의 이웃들을 담은 set에 포함될 떄, expand stop
+        for vertex in cand_q:
+            if N_X.issubset(set(G.neighbors(vertex))):
+                expand = False
+
+        # Apply the advanced node expansion (Lemma 4)
+
+        if len(new_X) >= t:
+            # List all MBs
+            if len(new_N_X) >= t:
+                print(new_X)
+                print(new_N_X)
+            # Apply pruning strategies (Lemma 3 and Lemma 6)
+
+        if len(new_X) + len(cand_p) >= t and len(new_N_X) >= t and expand:
+            # print("test")
+            iMB_Basic(G, k, t, new_X, new_N_X, new_cand_p, cand_q)
+
+        cand_q.union({u})
         # print(new_X)
         # print(cand_p)
+        # print(new_N_X)
+        # print(new_cand_p)
         # iMB_Basic()
 
 
-    # for u in list(cand_p):
-    #     X_p = X.union({u})
-    #     cand_p = cand_p.remove(u)
-    #     cand_p_x_p = cand_p
-    #     F_X_p = {v for v in F_X if G.degree(v) >= (len(X_p) - k)}
-    #
-    #     # Apply early stop strategy (Lemma 2)
-    #     # Apply advanced node expansion (Lemma 4)
-    #
-    #     if len(X_p) >= t:
-    #         # List all MBs here
-    #         if len(F_X_p) >= t:
-    #             for x in X_p:
-    #                 G.add_node(x)
-    #             for y in F_X_p:
-    #                 G.add_node(y)
-    #         # Apply pruning strategies (Lemma 3 and Lemma 6)
-    #
-    #     if len(X_p) + len(cand_p_x_p) >= t and len(F_X_p) >= t: #cand_p_x_p 얘를 어떻게 찾아야 되지?
-    #
-    #         iMB_Basic(G, k, t, X_p, cand_p_x_p, cand_q, F_X_p)
-    #     cand_q = cand_q.union({u})
+
     return nx.connected_components(G)
 
 def extract_number(s):
@@ -56,20 +54,6 @@ def run(G_, k, t): #t is threshold
     N_X = sorted(N_X, key=extract_number)  #sorting vertices
     cand_p = sorted(cand_p, key=extract_number)
 
-    # print(N_X)
-    # print(cand_p)
-
     return iMB_Basic(G, k, t, X, N_X, cand_p, cand_q)
-
-
-
-# G = nx.Graph()
-# G.add_edge('A', 'B')
-# G.add_edge('A', 'C')
-# G.add_edge('C', 'D')
-#
-# G_retrun = run(G, 1, 1)
-#
-# print(G_retrun)
 
 
