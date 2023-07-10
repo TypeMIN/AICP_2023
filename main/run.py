@@ -12,8 +12,9 @@ import algorithm.abcore
 import algorithm.ktip
 import algorithm.kwing
 import algorithm.bitruss
+import algorithm.bine
+import algorithm.deepcc
 import algorithm.biplex
-
 
 sys.setrecursionlimit(10000)
 
@@ -54,7 +55,7 @@ parser.add_argument('--a', type=int, default=3,
 parser.add_argument('--b', type=int, default=3,
                     help='user parameter for abcore')
 
-parser.add_argument('--k', type=int, default=2, help='user parameter for ktip, kwing or bitruss')
+parser.add_argument('--k', type=int, default=2, help='user parameter for ktip, kwing, bitruss or biplex')
 
 parser.add_argument('--t', type=int, default=1, help='user parameter for k-biplex')
 
@@ -104,6 +105,16 @@ elif args.algorithm == 'kwing':
 
 elif args.algorithm == 'bitruss':
     C = algorithm.bitruss.run(G, args.k)
+
+elif args.algorithm == 'bine':
+    # C = algorithm.bine.run()
+    C = nx.connected_components(G)
+    algorithm.bine.run()
+
+elif args.algorithm == 'deepcc':
+    # C = algorithm.deepcc.run()
+    C = nx.connected_components(G)
+    algorithm.deepcc.run()
 
 elif args.algorithm == 'biplex':
     C = algorithm.biplex.run(G, args.k, args.t)
