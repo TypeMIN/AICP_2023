@@ -1,0 +1,9 @@
+--- Phase: 1
+Initial Total Modularity: 0.61531190926276
+Iteration: 1 - Maximum Modularity Gain: 0.0283553206049149
+Iteration: 2 - Maximum Modularity Gain: 0
+--- Phase: 2
+Initial Total Modularity: 0.643667296786389
+Iteration: 1 - Maximum Modularity Gain: 0
+
+--- Final Murata+ Modularity: 0.643667296786389
