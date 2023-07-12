@@ -952,7 +952,9 @@ void biLouvainMethod::biLouvainMethodAlgorithm(Graph &g,double cutoffIterations,
 		pos = outputFileName.find_last_of(".");
 		_outputFileName = outputFileName.substr(0,pos);
 	}	
-        std::string outputModularityGain = _outputFileName + "_ResultsModularity.txt";
+        std::string outputModularityGain = "../../dataset/" + _outputFileName + "_ResultsModularity.txt";
+		printf("test: %s", outputModularityGain.c_str());
+
 	std::ofstream outfileMG;
 	outfileMG.open(outputModularityGain.c_str(),std::ios::out|std::ios::trunc);
 
@@ -1175,6 +1177,7 @@ int biLouvainMethod::numberNodesInsideCommunity(Graph &g,int communityId)
 void biLouvainMethod::generateOutputFile(std::string text, std::string fileName)
 {
 	std::ofstream file;
+	fileName = "../../dataset/" + fileName;
 	file.open(fileName.c_str(), std::ios::out|std::ios::app);
 	file << text;
 	file.close();
@@ -1203,7 +1206,7 @@ void biLouvainMethod::printCoClusterCommunitiesFile()
 {
 	int countCoClusters = 0;
 	std::stringstream line;
-	std::string outputCoclusters = _outputFileName + "_ResultsCoClusterCommunities.txt";
+	std::string outputCoclusters = "../../dataset/" + _outputFileName + "_ResultsCoClusterCommunities.txt";
 	std::ofstream outfileCCC;
 	outfileCCC.open(outputCoclusters.c_str(),std::ios::out|std::ios::trunc);
 	for(int i=0;i<_numberCommunities;i++)
@@ -1221,7 +1224,7 @@ void biLouvainMethod::printCoClusterCommunitiesFile()
 
 void biLouvainMethod::printAllCommunityNodes(Graph &g)
 {
-	std::string outputCommunities = _outputFileName + "_ResultsCommunities.txt";
+	std::string outputCommunities = "/../../dataset/" + _outputFileName + "_ResultsCommunities.txt";
 	std::ofstream outfileC;
 	outfileC.open(outputCommunities.c_str(),std::ios::out|std::ios::trunc);
 	int singletonsV1 = 0 ;
@@ -1296,7 +1299,7 @@ std::string biLouvainMethod::listNodesCommunities(Graph &g)
 
 void biLouvainMethod::printAllCommunityNodeswithSingletons(Graph &g,std::unordered_map<int,std::string> &bipartiteOriginalEntities)
 {
-	std::string outputCommunities = _outputFileName + "_ResultsCommunities.txt";
+	std::string outputCommunities = "../../dataset/" + _outputFileName + "_ResultsCommunities.txt";
 	std::ofstream outfileC;
 	outfileC.open(outputCommunities.c_str(),std::ios::out|std::ios::trunc);
 	int singletonsV1 = 0 ;
@@ -1430,7 +1433,7 @@ void biLouvainMethod::printCommunityNodesNeighbors(Graph &g,int communityId)
 
 void biLouvainMethod::printTimes(double biLouvainTime, double loadGraphTime, double fusingTime)
 {
-	std::string outputfileTime = _outputFileName + "_ResultsTime.txt";
+	std::string outputfileTime = "../../dataset/" + _outputFileName + "_ResultsTime.txt";
 	std::ofstream outfileTime;
 	outfileTime.open(outputfileTime.c_str(),std::ios::out|std::ios::trunc);
 	outfileTime << "::: Total Time: " << timeConverter(biLouvainTime+loadGraphTime+fusingTime).c_str() << "microseconds: " << biLouvainTime+loadGraphTime+fusingTime << "\n";
