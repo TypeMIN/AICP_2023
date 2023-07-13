@@ -1,5 +1,8 @@
 import networkx as nx
 import random
+from collections import Counter
+
+
 
 
 def calculate_bipartite_modularity(G, labels):
@@ -15,8 +18,21 @@ def calculate_bipartite_modularity(G, labels):
 
 
 def LPAb(G):
+    # print(G.nodes)
+    for node in G.nodes():
+        G.nodes[node]['bipartite'] = 0 if 'u' in node else 1
+    red_nodes = [n for n in G.nodes() if G.nodes[n]['bipartite'] == 0]
+    blue_nodes = [n for n in G.nodes() if G.nodes[n]['bipartite'] == 1]
     # Initialize with unique labels
-    labels = {i: i for i in G.nodes()}
+    labels = {}
+    unique_label = 0
+    for u in red_nodes:
+        labels[u] = unique_label
+        unique_label += 1
+    for v in blue_nodes:
+        labels[v] = unique_label
+        unique_label += 1
+    # print(labels)
     nodes = list(G.nodes())
     while True:
         random.shuffle(nodes)
@@ -38,19 +54,22 @@ def LPAb(G):
             break
 
         labels = new_labels
+    # print(labels)
+    label_counts = Counter(labels.values())
+    most_common_label, _ = label_counts.most_common(1)[0]
+    most_common_nodes = [node for node, label in labels.items() if label == most_common_label]
+    return most_common_nodes
 
-    return labels
 
-
-# create a random bipartite graph
-G = nx.bipartite.random_graph(5, 7, 0.5)
-
-# give the node color 0 or 1, representing red and blue
-color = {node: 0 if node < 5 else 1 for node in G.nodes()}
-print("Edges of G :", G.edges)
-
-labels = LPAb(G)
-print("Community labels:", labels)
-
-modularity = calculate_bipartite_modularity(G, labels)
-print("Bipartite Modularity:", modularity)
+# # create a random bipartite graph
+# G = nx.bipartite.random_graph(5, 7, 0.5)
+#
+# # give the node color 0 or 1, representing red and blue
+# color = {node: 0 if node < 5 else 1 for node in G.nodes()}
+# print("Edges of G :", G.edges)
+#
+# labels = LPAb(G)
+# print("Community labels:", labels)
+#
+# modularity = calculate_bipartite_modularity(G, labels)
+# print("Bipartite Modularity:", modularity)

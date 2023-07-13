@@ -12,9 +12,11 @@ import algorithm.abcore
 import algorithm.ktip
 import algorithm.kwing
 import algorithm.bitruss
-import algorithm.bine
-import algorithm.deepcc
+#import algorithm.bine
+#import algorithm.deepcc
 import algorithm.biplex
+import algorithm.LPAb
+import algorithm.LPAb_Plus
 
 sys.setrecursionlimit(10000)
 
@@ -62,7 +64,7 @@ parser.add_argument('--t', type=int, default=1, help='user parameter for k-biple
 parser.add_argument('--network', default="../dataset/alphabeta_sample.txt",
                     help='a folder name containing network.dat')
 
-parser.add_argument('--algorithm', default="abcore",
+parser.add_argument('--algorithm', default="LPAb_Plus",
                     help='specify algorithm name')
 
 args = parser.parse_args()
@@ -118,6 +120,12 @@ elif args.algorithm == 'deepcc':
 
 elif args.algorithm == 'biplex':
     C = algorithm.biplex.run(G, args.k, args.t)
+
+elif args.algorithm == 'LPAb':
+    C = algorithm.LPAb.LPAb(G)
+
+elif args.algorithm == 'LPAb_Plus':
+    C = algorithm.LPAb_Plus.LPAb_plus(G)
 
 run_time = time.time() - start_time
 
