@@ -1,0 +1,10 @@
+Community 0[V1]: u1,u2,u3
+Community 1[V1]: u4,u5,u6
+Community 2[V1]: u7,u8
+Community 3[V2]: v1,v2,v3
+Community 4[V2]: v4,v5,v6
+Community 5[V2]: v8,v7
+
+Singletons Partition V1: 0
+Singletons Partition V2: 0
+0,0,0,1,1,1,2,2,3,3,3,4,4,4,5,5
