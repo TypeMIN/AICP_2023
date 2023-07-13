@@ -818,7 +818,7 @@ double biLouvainMethod::calculateMaxModularityGainIteration(Graph &g,int* &nodes
 				    updateNodeIntraTypeCommunity(g,g._graph[nodesOrderExecution[i]].getId(),currentCommunity,candidateCommunity);
 				    updateIntraTypeNeighborCommunities(g,g._graph[nodesOrderExecution[i]].getId(),currentCommunity,candidateCommunity);
 				}
-				printf("\n Node: %d  From Community: %d  To Community: %d  Maximum Modularity Gain: %.15lf",g._graph[nodesOrderExecution[i]].getId(), currentCommunity,candidateCommunity,totalDeltaModularityGain);
+				// printf("\n Node: %d  From Community: %d  To Community: %d  Maximum Modularity Gain: %.15lf",g._graph[nodesOrderExecution[i]].getId(), currentCommunity,candidateCommunity,totalDeltaModularityGain);
 				maxModularityGainIteration += totalDeltaModularityGain;
 				//printCommunitiesContributionModularity();
 			}
@@ -919,7 +919,7 @@ double biLouvainMethod::calculateMaxModularityGainIterationIntraType(Graph &g,in
                              _communities[currentCommunity].setModularityContribution(newContributionCurrentCommunity);	
                              updateNodeIntraTypeCommunity(g,g._graph[nodesOrderExecution[i]].getId(),currentCommunity,candidateCommunity);
                              updateIntraTypeNeighborCommunities(g,g._graph[nodesOrderExecution[i]].getId(),currentCommunity,candidateCommunity);
-                             printf("\n Node: %d  From Community: %d  To Community: %d  Maximum Modularity Gain: %.15lf",g._graph[nodesOrderExecution[i]].getId(), currentCommunity,candidateCommunity,totalDeltaModularityGain);
+                            //  printf("\n Node: %d  From Community: %d  To Community: %d  Maximum Modularity Gain: %.15lf",g._graph[nodesOrderExecution[i]].getId(), currentCommunity,candidateCommunity,totalDeltaModularityGain);
 			     maxModularityGainIteration += totalDeltaModularityGain;
                              //printCommunitiesContributionModularity();
                         }
@@ -953,7 +953,6 @@ void biLouvainMethod::biLouvainMethodAlgorithm(Graph &g,double cutoffIterations,
 		_outputFileName = outputFileName.substr(0,pos);
 	}	
         std::string outputModularityGain = "../../dataset/" + _outputFileName + "_ResultsModularity.txt";
-		printf("test: %s", outputModularityGain.c_str());
 
 	std::ofstream outfileMG;
 	outfileMG.open(outputModularityGain.c_str(),std::ios::out|std::ios::trunc);
@@ -997,17 +996,17 @@ void biLouvainMethod::biLouvainMethodAlgorithm(Graph &g,double cutoffIterations,
 		gettimeofday(&t12,NULL);
 		initialCoClusterMateTime += (t12.tv_sec - t11.tv_sec)*1000000 + (t12.tv_usec - t11.tv_usec);
 
-		printf("\n\n ::: Phase %d :::", phases);
+		// printf("\n\n ::: Phase %d :::", phases);
 		line.str("");
 		line << "--- Phase: " <<  phases << "\n";
 		outfileMG << line.str();
-		printf("\n Initial Total partitioning modularity: %.15lf", totalModularity);
+		// printf("\n Initial Total partitioning modularity: %.15lf", totalModularity);
 		line.str("");
 		line.precision(15);
 		line << "Initial Total Modularity: " <<  totalModularity << "\n";
 		outfileMG << line.str();
-		printf("\n\n ::: Initial Communities :::");
-		printCommunities(g);
+		// printf("\n\n ::: Initial Communities :::");
+		// printCommunities(g);
 		//printCommunitiesContributionModularity();
 		int iterations = 1;
 		double _cutoffIterations = 2.0;
@@ -1021,10 +1020,10 @@ void biLouvainMethod::biLouvainMethodAlgorithm(Graph &g,double cutoffIterations,
 		//ITERATION		
 		while(_cutoffIterations > cutoffIterations)
 		{
-			printf("\n\n ::: Iteration: %d Start :::",iterations);
+			// printf("\n\n ::: Iteration: %d Start :::",iterations);
 			double maxModularityGainIteration = calculateMaxModularityGainIteration(g,nodesOrderExecution);
 			calculateCommunitiesModulatiryContribution();
-			printf("\n\n ::: Iteration: %d End  :::  Maximum Modularity Gain: %.15lf", iterations,maxModularityGainIteration);
+			// printf("\n\n ::: Iteration: %d End  :::  Maximum Modularity Gain: %.15lf", iterations,maxModularityGainIteration);
 			line.str("");
 			line.precision(15);
 			line << "Iteration: " <<  iterations << " - Maximum Modularity Gain: " << maxModularityGainIteration << "\n";
@@ -1046,8 +1045,8 @@ void biLouvainMethod::biLouvainMethodAlgorithm(Graph &g,double cutoffIterations,
 	line << "\n--- Final Murata+ Modularity: " <<  totalModularity;
 	outfileMG <<line.str();
 	outfileMG.close();
-	printAllCommunityNodeswithSingletons(g,bipartiteOriginalEntities);
-	printCoClusterCommunitiesFile();
+	// printAllCommunityNodeswithSingletons(g,bipartiteOriginalEntities);
+	// printCoClusterCommunitiesFile();
 	_communities.clear();
 	delete[] nodesOrderExecution;
 }
@@ -1108,16 +1107,16 @@ void biLouvainMethod::biLouvainMethodAlgorithmIntraType(Graph &g,double cutoffIt
                 gettimeofday(&t12,NULL);
                 initialCoClusterMateTime += (t12.tv_sec - t11.tv_sec)*1000000 + (t12.tv_usec - t11.tv_usec);
 
-                printf("\n\n ::: Phase %d :::", phases);
+                // printf("\n\n ::: Phase %d :::", phases);
                 line.str("");
                 line << "--- Phase: " <<  phases << "\n";
                 outfileMG << line.str();
-                printf("\n Initial Total partitioning modularity: %.15lf", totalModularity);
+                // printf("\n Initial Total partitioning modularity: %.15lf", totalModularity);
                 line.str("");
                 line.precision(15);
                 line << "Initial Total Modularity: " <<  totalModularity << "\n";
                 outfileMG << line.str();
-                printf("\n\n ::: Initial Communities :::");
+                // printf("\n\n ::: Initial Communities :::");
                 //printCommunities(g);
                 //printCommunitiesContributionModularity();
                 int iterations = 1;
@@ -1132,10 +1131,10 @@ void biLouvainMethod::biLouvainMethodAlgorithmIntraType(Graph &g,double cutoffIt
                 //ITERATION             
                 while(_cutoffIterations > cutoffIterations)
                 {
-                        printf("\n\n ::: Iteration: %d Start :::",iterations);
+                        // printf("\n\n ::: Iteration: %d Start :::",iterations);
                         double maxModularityGainIteration = calculateMaxModularityGainIterationIntraType(g,nodesOrderExecution);
                         calculateCommunitiesModulatiryContribution();
-                        printf("\n\n ::: Iteration: %d End  :::  Maximum Modularity Gain: %.15lf", iterations,maxModularityGainIteration);
+                        // printf("\n\n ::: Iteration: %d End  :::  Maximum Modularity Gain: %.15lf", iterations,maxModularityGainIteration);
                         line.str("");
                         line.precision(15);
                         line << "Iteration: " <<  iterations << " - Maximum Modularity Gain: " << maxModularityGainIteration << "\n";
@@ -1156,7 +1155,7 @@ void biLouvainMethod::biLouvainMethodAlgorithmIntraType(Graph &g,double cutoffIt
         line << "\n--- Final Murata+ Modularity: " <<  totalModularity;
         outfileMG <<line.str();
         outfileMG.close();
-        printAllCommunityNodeswithSingletons(g,bipartiteOriginalEntities);
+        // printAllCommunityNodeswithSingletons(g,bipartiteOriginalEntities);
         _communities.clear();
         delete[] nodesOrderExecution;
 }

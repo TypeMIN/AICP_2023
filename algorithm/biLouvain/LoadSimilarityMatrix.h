@@ -81,7 +81,7 @@ class LoadSimilarityMatrix
 				location = line.find(",");
 				if(location == std::string::npos)
 				{
-					printf("\n ::: The similarity matrix should be "," delimited :::\n");
+					// printf("\n ::: The similarity matrix should be "," delimited :::\n");
 					exit(EXIT_FAILURE);
 				}
 				inputFile.clear();
