@@ -167,7 +167,7 @@ int main(int argc, char *argv[])
 					biLouvain.biLouvainMethodAlgorithmIntraType(*graph,cutoffIterations,cutoffPhases,optionOrder,bipartiteOriginalEntities,bipartiteFileName,outputFileName);
 				gettimeofday(&endTime,NULL);	
 				double biLouvainAlgorithmTime = (endTime.tv_sec - startTime.tv_sec)*1000000 + (endTime.tv_usec - startTime.tv_usec);
-				biLouvain.printTimes(biLouvainAlgorithmTime,loadGraphTime,f.fusingTime);
+				// biLouvain.printTimes(biLouvainAlgorithmTime,loadGraphTime,f.fusingTime);
 				graph->destroyGraph();
 			}
 			else

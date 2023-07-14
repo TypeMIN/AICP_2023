@@ -127,7 +127,7 @@ class biLouvainMethod
 		void printCommunities(Graph &g);
 		void printCoClusterCommunitiesFile();
 		void printAllCommunityNodes(Graph &g);
-		void printAllCommunityNodeswithSingletons(Graph &g,std::unordered_map<int,std::string> &bipartiteOriginalEntities);
+		void printAllCommunityNodeswithSingletons(Graph &g,std::unordered_map<int,std::string> &bipartiteOriginalEntities, double bilouvaintime);
 		void printCommunityNodes(int communityId);
 		void printCommunityNodesNeighbors(Graph &g,int communityId);
 		void printTimes(double totalTime, double loadGraphTime,double mergingTime);

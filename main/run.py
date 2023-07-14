@@ -136,33 +136,36 @@ elif args.algorithm == 'LPAb_Plus':
 
 run_time = time.time() - start_time
 
-print('running time', run_time)
+if args.algorithm == 'biLouvain':
+    pass
+else :
+    print('running time', run_time)
 
-result = list()
-if C is not None:
-    result = list(C)
-print("----------------------------------------------------------")
-for comp in result:
-    comp = sorted(comp, reverse=False)
-    for u in list(comp):
-        print(u, ' ', end="")
-    print("")
-print("----------------------------------------------------------")
-
-size, num = measure.get_result(G, result)
-print("resultant_statistic ", run_time, size, num)
-
-with open(output, 'w') as f:
-    f.write("seconds" + "\t" + str(run_time) + '\n')
-    f.write("size" + "\t" + str(size) + '\n')
-    f.write("num" + "\t" + str(num) + '\n')
-
+    result = list()
+    if C is not None:
+        result = list(C)
+    print("----------------------------------------------------------")
     for comp in result:
-       # comp = [int(x) for x in comp]
         comp = sorted(comp, reverse=False)
         for u in list(comp):
-            f.write(str(u) + " ")
-        f.write("\n")
+            print(u, ' ', end="")
+        print("")
+    print("----------------------------------------------------------")
 
-f.close()
+    size, num = measure.get_result(G, result)
+    print("resultant_statistic ", run_time, size, num)
+
+    with open(output, 'w') as f:
+        f.write("seconds" + "\t" + str(run_time) + '\n')
+        f.write("size" + "\t" + str(size) + '\n')
+        f.write("num" + "\t" + str(num) + '\n')
+
+        for comp in result:
+           # comp = [int(x) for x in comp]
+            comp = sorted(comp, reverse=False)
+            for u in list(comp):
+                f.write(str(u) + " ")
+            f.write("\n")
+
+    f.close()
 
