@@ -5,6 +5,8 @@ import time
 import sys
 import reader
 import measure
+import numpy as np
+from scipy.sparse import coo_matrix
 
 sys.path.append("..")
 
@@ -12,9 +14,13 @@ import algorithm.abcore
 import algorithm.ktip
 import algorithm.kwing
 import algorithm.bitruss
-import algorithm.bine
-import algorithm.deepcc
+#import algorithm.bine
+#import algorithm.deepcc
 import algorithm.biplex
+import algorithm.bilouvain
+import algorithm.LPAb
+import algorithm.LPAb_Plus
+import algorithm.spec
 
 sys.setrecursionlimit(10000)
 
@@ -44,6 +50,11 @@ def get_user_param(args_set, _alg):
         ret['k'] = args_set.k
         ret['t'] = args_set.t
 
+    elif _alg == "biLouvain":
+        ret['k'] = args_set.k
+
+    elif _alg == "spec":
+        ret['c'] = args_set.c
     return ret
 
 
@@ -55,6 +66,9 @@ parser.add_argument('--a', type=int, default=3,
 parser.add_argument('--b', type=int, default=3,
                     help='user parameter for abcore')
 
+parser.add_argument('--c', type=int, default=3,
+                    help='user parameter for spec')
+
 parser.add_argument('--k', type=int, default=2, help='user parameter for ktip, kwing, bitruss or biplex')
 
 parser.add_argument('--t', type=int, default=1, help='user parameter for k-biplex')
@@ -62,7 +76,7 @@ parser.add_argument('--t', type=int, default=1, help='user parameter for k-biple
 parser.add_argument('--network', default="../dataset/alphabeta_sample.txt",
                     help='a folder name containing network.dat')
 
-parser.add_argument('--algorithm', default="abcore",
+parser.add_argument('--algorithm', default="LPAb_Plus",
                     help='specify algorithm name')
 
 args = parser.parse_args()
@@ -86,10 +100,15 @@ print("output", output)
 # Global Parameter
 G = None
 C = None
+X = None
 #############################################################################
 # read network
-G = reader.readEdgeList(args.network)
-G.remove_edges_from(nx.selfloop_edges(G))
+if args.algorithm == 'spec':
+    a = np.loadtxt(args.network, delimiter=',', skiprows=1)
+    X = (coo_matrix((a[:, 2], (a[:, 0].astype(int), a[:, 1].astype(int))))).tocsr()
+else:
+    G = reader.readEdgeList(args.network)
+    G.remove_edges_from(nx.selfloop_edges(G))
 #############################################################################
 
 start_time = time.time()
@@ -119,35 +138,61 @@ elif args.algorithm == 'deepcc':
 elif args.algorithm == 'biplex':
     C = algorithm.biplex.run(G, args.k, args.t)
 
+elif args.algorithm == 'biLouvain':
+    C = algorithm.bilouvain.run(args.network)
+
+elif args.algorithm == "spec":
+    C = algorithm.spec.run(X, args.c)
+
+elif args.algorithm == 'LPAb':
+    C = algorithm.LPAb.LPAb(G)
+
+elif args.algorithm == 'LPAb_Plus':
+    C = algorithm.LPAb_Plus.LPAb_plus(G)
+
 run_time = time.time() - start_time
 
-print('running time', run_time)
+if args.algorithm == 'biLouvain':
+    pass
+elif args.algorithm == "spec":
+    print('running time', run_time)
+    print("----------------------------------------------------------")
+    for i in range(args.c):
+        print("Clustering {0} : ".format(i), C.get_indices(i))
+    print("----------------------------------------------------------")
+    with open(output, 'w') as f:
+        f.write("seconds" + "\t" + str(run_time) + '\n')
+        for i in range(args.c):
+            f.write("Clustering {0} : ".format(i) + str(C.get_indices(i)) + '\n')
+    f.close()
+else :
+    print('running time', run_time)
 
-result = list()
-if C is not None:
-    result = list(C)
-print("----------------------------------------------------------")
-for comp in result:
-    comp = sorted(comp, reverse=False)
-    for u in list(comp):
-        print(u, ' ', end="")
-    print("")
-print("----------------------------------------------------------")
-
-size, num = measure.get_result(G, result)
-print("resultant_statistic ", run_time, size, num)
-
-with open(output, 'w') as f:
-    f.write("seconds" + "\t" + str(run_time) + '\n')
-    f.write("size" + "\t" + str(size) + '\n')
-    f.write("num" + "\t" + str(num) + '\n')
-
+    result = list()
+    if C is not None:
+        result = list(C)
+    print("----------------------------------------------------------")
     for comp in result:
-       # comp = [int(x) for x in comp]
         comp = sorted(comp, reverse=False)
         for u in list(comp):
-            f.write(str(u) + " ")
-        f.write("\n")
+            print(u, ' ', end="")
+        print("")
+    print("----------------------------------------------------------")
 
-f.close()
+    size, num = measure.get_result(G, result)
+    print("resultant_statistic ", run_time, size, num)
+
+    with open(output, 'w') as f:
+        f.write("seconds" + "\t" + str(run_time) + '\n')
+        f.write("size" + "\t" + str(size) + '\n')
+        f.write("num" + "\t" + str(num) + '\n')
+
+        for comp in result:
+           # comp = [int(x) for x in comp]
+            comp = sorted(comp, reverse=False)
+            for u in list(comp):
+                f.write(str(u) + " ")
+            f.write("\n")
+
+    f.close()
 

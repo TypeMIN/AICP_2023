@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
                 bool band = false;
                 if(infile.is_open()==true)
                 {
-                        std::cout << "\n ::: Loading Bipartite Graph " << inputFileName << " :::";
+                        // std::cout << "\n ::: Loading Bipartite Graph " << inputFileName << " :::";
                         std::string bipartiteFileName;
                         std::unordered_map<int,std::string> bipartiteOriginalEntities;
                         //if((inputFileName.find("bipartite") == std::string::npos)||(inputFileName.find("Bipartite") == std::string::npos))
@@ -105,17 +105,20 @@ int main(int argc, char *argv[])
 				}
                         }
                         delete[] pieces;
-                        if(band == false)
-                        {
-				int pos = inputFileName.find_last_of(".");
-				bipartiteFileName = inputFileName.substr(0,pos)+"_bipartite.txt";
-				bipartiteOriginalEntities=PreProcessInputBipartiteGraph::preProcessingGraphData(inputFileName,delimiter);
-			}
-			else
-			{
-				bipartiteFileName = inputFileName;
-				bipartiteOriginalEntities=PreProcessInputBipartiteGraph::readDictionaryFile(inputFileName);
-			}
+            //             if(band == false)
+            //             {
+			// 	int pos = inputFileName.find_last_of(".");
+			// 	bipartiteFileName = inputFileName.substr(0,pos)+"_bipartite.txt";
+			// 	bipartiteOriginalEntities=PreProcessInputBipartiteGraph::preProcessingGraphData(inputFileName,delimiter);
+			// }
+			// else
+			// {
+			// 	bipartiteFileName = inputFileName;
+			// 	bipartiteOriginalEntities=PreProcessInputBipartiteGraph::readDictionaryFile(inputFileName);
+			// }
+			int pos = inputFileName.find_last_of(".");
+			bipartiteFileName = inputFileName.substr(0,pos)+"_bipartite.txt";
+			bipartiteOriginalEntities=PreProcessInputBipartiteGraph::preProcessingGraphData(inputFileName,delimiter);
 			double loadGraphTime = 0.0;
 			int pass = -1;
 			gettimeofday(&startTime,NULL);
@@ -125,7 +128,7 @@ int main(int argc, char *argv[])
 			loadGraphTime = (endTime.tv_sec - startTime.tv_sec)*1000000 + (endTime.tv_usec - startTime.tv_usec);
 			if (pass == 0)
 			{                            
-				std::cout << "\n ::: Done Loading Bipartite Graph :::";		
+				// std::cout << "\n ::: Done Loading Bipartite Graph :::";		
 				if(alpha != 1.0)
 				{
 					int numberMatrices = 0;
@@ -156,15 +159,15 @@ int main(int argc, char *argv[])
                                         f.fuseMethodFile(*graph,bipartiteFileName,alpha,cutoffFuse);
                                 else if((fuse == 1)&&(initialCommunitiesFileName.empty()==false))
                                         f.initialCommunityDefinitionProvidedFileCommunities(*graph,initialCommunitiesFileName,alpha);
-				std::cout << "\n ::: Starting biLouvain Algorithm :::";
-				gettimeofday(&startTime,NULL);							
+				// std::cout << "\n ::: Starting biLouvain Algorithm :::";
+				gettimeofday(&startTime,NULL);
 				if(alpha != 0.0)
 					biLouvain.biLouvainMethodAlgorithm(*graph,cutoffIterations,cutoffPhases,optionOrder,bipartiteOriginalEntities,bipartiteFileName,outputFileName,alpha);
 				else
 					biLouvain.biLouvainMethodAlgorithmIntraType(*graph,cutoffIterations,cutoffPhases,optionOrder,bipartiteOriginalEntities,bipartiteFileName,outputFileName);
 				gettimeofday(&endTime,NULL);	
 				double biLouvainAlgorithmTime = (endTime.tv_sec - startTime.tv_sec)*1000000 + (endTime.tv_usec - startTime.tv_usec);
-				biLouvain.printTimes(biLouvainAlgorithmTime,loadGraphTime,f.fusingTime);
+				// biLouvain.printTimes(biLouvainAlgorithmTime,loadGraphTime,f.fusingTime);
 				graph->destroyGraph();
 			}
 			else
@@ -183,7 +186,7 @@ int main(int argc, char *argv[])
 	{
 		std::cout << " ::: Unknown error Main :::" << std::endl;
 	}
-	std::cout << std::endl << " ::: biLouvain Method has finished :::" << std::endl;
+	// std::cout << std::endl << " ::: biLouvain Method has finished :::" << std::endl;
 	return 0;
 }
 
@@ -201,7 +204,7 @@ void parseCommandLine(const int argc, char * const argv[])
 		//printf("%d \t %d \t %c\n",prevInd,optind,c);
 		if((optind==prevInd+2) && (*optarg=='-'))
 		{
-			printf("::: You forgot to provide an argument %s :::\n");
+			// printf("::: You forgot to provide an argument %s :::\n");
 			printUsage();
 		}
 		switch (c) {
@@ -273,7 +276,7 @@ void parseCommandLine(const int argc, char * const argv[])
 			}
 			break;
 		    case ':':
-			printUsage;
+			// printUsage;
 			break;
 		    case '?':
 			/*if((optopt == 'i') || (optopt == 'd'))

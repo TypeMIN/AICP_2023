@@ -1,10 +1,10 @@
 import networkx as nx
 
-# Create a random bipartite graph
-G = nx.bipartite.random_graph(5, 7, 0.5)
-
-# Give the node color 0 or 1, representing red and blue
-color = {node: 0 if node < 5 else 1 for node in G.nodes()}
+# # Create a random bipartite graph
+# G = nx.bipartite.random_graph(5, 7, 0.5)
+#
+# # Give the node color 0 or 1, representing red and blue
+# color = {node: 0 if node < 5 else 1 for node in G.nodes()}
 
 def LPAb(G, labels):
     # Initialize labels and degree dicts
@@ -86,6 +86,8 @@ def calculate_delta_QB(G, t1, t2, labels, degrees, m):
     return delta_QB
 
 def LPAb_plus(G):
+    for node in G.nodes():
+        G.nodes[node]['bipartite'] = 0 if 'u' in node else 1
     red_nodes = [n for n in G.nodes() if G.nodes[n]['bipartite'] == 0]
     blue_nodes = [n for n in G.nodes() if G.nodes[n]['bipartite'] == 1]
     labels = {}
@@ -126,11 +128,11 @@ def LPAb_plus(G):
         # Stop if the community division doesn't change
         if communities == new_communities:
             break
-    print(labels)
+    # print(labels)
     return new_communities
 
-# Call the function
-labels = LPAb_plus(G)
-
-# Print the resulting labels
-print("Community labels:", labels)
+# # Call the function
+# labels = LPAb_plus(G)
+#
+# # Print the resulting labels
+# print("Community labels:", labels)

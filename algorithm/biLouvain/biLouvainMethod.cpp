@@ -33,6 +33,8 @@
 
 
 #include "biLouvainMethod.h"
+#include "biLouvainMethodMurataPN.h"
+
 
 biLouvainMethod::biLouvainMethod()
 {
@@ -818,7 +820,7 @@ double biLouvainMethod::calculateMaxModularityGainIteration(Graph &g,int* &nodes
 				    updateNodeIntraTypeCommunity(g,g._graph[nodesOrderExecution[i]].getId(),currentCommunity,candidateCommunity);
 				    updateIntraTypeNeighborCommunities(g,g._graph[nodesOrderExecution[i]].getId(),currentCommunity,candidateCommunity);
 				}
-				printf("\n Node: %d  From Community: %d  To Community: %d  Maximum Modularity Gain: %.15lf",g._graph[nodesOrderExecution[i]].getId(), currentCommunity,candidateCommunity,totalDeltaModularityGain);
+				// printf("\n Node: %d  From Community: %d  To Community: %d  Maximum Modularity Gain: %.15lf",g._graph[nodesOrderExecution[i]].getId(), currentCommunity,candidateCommunity,totalDeltaModularityGain);
 				maxModularityGainIteration += totalDeltaModularityGain;
 				//printCommunitiesContributionModularity();
 			}
@@ -919,7 +921,7 @@ double biLouvainMethod::calculateMaxModularityGainIterationIntraType(Graph &g,in
                              _communities[currentCommunity].setModularityContribution(newContributionCurrentCommunity);	
                              updateNodeIntraTypeCommunity(g,g._graph[nodesOrderExecution[i]].getId(),currentCommunity,candidateCommunity);
                              updateIntraTypeNeighborCommunities(g,g._graph[nodesOrderExecution[i]].getId(),currentCommunity,candidateCommunity);
-                             printf("\n Node: %d  From Community: %d  To Community: %d  Maximum Modularity Gain: %.15lf",g._graph[nodesOrderExecution[i]].getId(), currentCommunity,candidateCommunity,totalDeltaModularityGain);
+                            //  printf("\n Node: %d  From Community: %d  To Community: %d  Maximum Modularity Gain: %.15lf",g._graph[nodesOrderExecution[i]].getId(), currentCommunity,candidateCommunity,totalDeltaModularityGain);
 			     maxModularityGainIteration += totalDeltaModularityGain;
                              //printCommunitiesContributionModularity();
                         }
@@ -952,10 +954,13 @@ void biLouvainMethod::biLouvainMethodAlgorithm(Graph &g,double cutoffIterations,
 		pos = outputFileName.find_last_of(".");
 		_outputFileName = outputFileName.substr(0,pos);
 	}	
-        std::string outputModularityGain = "../../dataset/" + _outputFileName + "_ResultsModularity.txt";
-		printf("test: %s", outputModularityGain.c_str());
+        std::string outputModularityGain = "../../dataset/"+ _outputFileName +"_biLobain_ResultsModularity.dat";
 
 	std::ofstream outfileMG;
+
+	biLouvainMethodMurataPN biLouvain;
+	struct timeval startTime,endTime;	
+
 	outfileMG.open(outputModularityGain.c_str(),std::ios::out|std::ios::trunc);
 
 	initialCommunityTime = 0.0;
@@ -973,6 +978,7 @@ void biLouvainMethod::biLouvainMethodAlgorithm(Graph &g,double cutoffIterations,
 	double phaseModularity = 1;
 	int phases = 1;
 	int* nodesOrderExecution = NULL;
+	gettimeofday(&startTime,NULL);
 
 	//PHASE
 	while((phaseModularity-totalModularity) > cutoffPhase)
@@ -997,17 +1003,17 @@ void biLouvainMethod::biLouvainMethodAlgorithm(Graph &g,double cutoffIterations,
 		gettimeofday(&t12,NULL);
 		initialCoClusterMateTime += (t12.tv_sec - t11.tv_sec)*1000000 + (t12.tv_usec - t11.tv_usec);
 
-		printf("\n\n ::: Phase %d :::", phases);
+		// printf("\n\n ::: Phase %d :::", phases);
 		line.str("");
 		line << "--- Phase: " <<  phases << "\n";
 		outfileMG << line.str();
-		printf("\n Initial Total partitioning modularity: %.15lf", totalModularity);
+		// printf("\n Initial Total partitioning modularity: %.15lf", totalModularity);
 		line.str("");
 		line.precision(15);
 		line << "Initial Total Modularity: " <<  totalModularity << "\n";
 		outfileMG << line.str();
-		printf("\n\n ::: Initial Communities :::");
-		printCommunities(g);
+		// printf("\n\n ::: Initial Communities :::");
+		// printCommunities(g);
 		//printCommunitiesContributionModularity();
 		int iterations = 1;
 		double _cutoffIterations = 2.0;
@@ -1021,10 +1027,10 @@ void biLouvainMethod::biLouvainMethodAlgorithm(Graph &g,double cutoffIterations,
 		//ITERATION		
 		while(_cutoffIterations > cutoffIterations)
 		{
-			printf("\n\n ::: Iteration: %d Start :::",iterations);
+			// printf("\n\n ::: Iteration: %d Start :::",iterations);
 			double maxModularityGainIteration = calculateMaxModularityGainIteration(g,nodesOrderExecution);
 			calculateCommunitiesModulatiryContribution();
-			printf("\n\n ::: Iteration: %d End  :::  Maximum Modularity Gain: %.15lf", iterations,maxModularityGainIteration);
+			// printf("\n\n ::: Iteration: %d End  :::  Maximum Modularity Gain: %.15lf", iterations,maxModularityGainIteration);
 			line.str("");
 			line.precision(15);
 			line << "Iteration: " <<  iterations << " - Maximum Modularity Gain: " << maxModularityGainIteration << "\n";
@@ -1044,10 +1050,15 @@ void biLouvainMethod::biLouvainMethodAlgorithm(Graph &g,double cutoffIterations,
 	line.str("");
 	line.precision(15);
 	line << "\n--- Final Murata+ Modularity: " <<  totalModularity;
+	gettimeofday(&endTime,NULL);
 	outfileMG <<line.str();
 	outfileMG.close();
-	printAllCommunityNodeswithSingletons(g,bipartiteOriginalEntities);
-	printCoClusterCommunitiesFile();
+		
+	double biLouvainAlgorithmTime = (endTime.tv_sec - startTime.tv_sec)*1000000 + (endTime.tv_usec - startTime.tv_usec);
+	printf("Only BiLovain Algorithm running time %f\n",biLouvainAlgorithmTime/1000000);
+
+	printAllCommunityNodeswithSingletons(g,bipartiteOriginalEntities, biLouvainAlgorithmTime);
+	// printCoClusterCommunitiesFile();
 	_communities.clear();
 	delete[] nodesOrderExecution;
 }
@@ -1071,6 +1082,10 @@ void biLouvainMethod::biLouvainMethodAlgorithmIntraType(Graph &g,double cutoffIt
         }
         std::string outputModularityGain = _outputFileName + "_ResultsModularity.txt";
         std::ofstream outfileMG;
+
+		biLouvainMethodMurataPN biLouvain;
+		struct timeval startTime,endTime;	
+
         outfileMG.open(outputModularityGain.c_str(),std::ios::out|std::ios::trunc);
 
         initialCommunityTime = 0.0;
@@ -1088,6 +1103,8 @@ void biLouvainMethod::biLouvainMethodAlgorithmIntraType(Graph &g,double cutoffIt
         double phaseModularity = 1;
         int phases = 1;
         int* nodesOrderExecution = NULL;
+		gettimeofday(&startTime,NULL);
+
 
         //PHASE
         while((phaseModularity-totalModularity) > cutoffPhase)
@@ -1108,16 +1125,16 @@ void biLouvainMethod::biLouvainMethodAlgorithmIntraType(Graph &g,double cutoffIt
                 gettimeofday(&t12,NULL);
                 initialCoClusterMateTime += (t12.tv_sec - t11.tv_sec)*1000000 + (t12.tv_usec - t11.tv_usec);
 
-                printf("\n\n ::: Phase %d :::", phases);
+                // printf("\n\n ::: Phase %d :::", phases);
                 line.str("");
                 line << "--- Phase: " <<  phases << "\n";
                 outfileMG << line.str();
-                printf("\n Initial Total partitioning modularity: %.15lf", totalModularity);
+                // printf("\n Initial Total partitioning modularity: %.15lf", totalModularity);
                 line.str("");
                 line.precision(15);
                 line << "Initial Total Modularity: " <<  totalModularity << "\n";
                 outfileMG << line.str();
-                printf("\n\n ::: Initial Communities :::");
+                // printf("\n\n ::: Initial Communities :::");
                 //printCommunities(g);
                 //printCommunitiesContributionModularity();
                 int iterations = 1;
@@ -1132,10 +1149,10 @@ void biLouvainMethod::biLouvainMethodAlgorithmIntraType(Graph &g,double cutoffIt
                 //ITERATION             
                 while(_cutoffIterations > cutoffIterations)
                 {
-                        printf("\n\n ::: Iteration: %d Start :::",iterations);
+                        // printf("\n\n ::: Iteration: %d Start :::",iterations);
                         double maxModularityGainIteration = calculateMaxModularityGainIterationIntraType(g,nodesOrderExecution);
                         calculateCommunitiesModulatiryContribution();
-                        printf("\n\n ::: Iteration: %d End  :::  Maximum Modularity Gain: %.15lf", iterations,maxModularityGainIteration);
+                        // printf("\n\n ::: Iteration: %d End  :::  Maximum Modularity Gain: %.15lf", iterations,maxModularityGainIteration);
                         line.str("");
                         line.precision(15);
                         line << "Iteration: " <<  iterations << " - Maximum Modularity Gain: " << maxModularityGainIteration << "\n";
@@ -1154,9 +1171,12 @@ void biLouvainMethod::biLouvainMethodAlgorithmIntraType(Graph &g,double cutoffIt
         line.str("");
         line.precision(15);
         line << "\n--- Final Murata+ Modularity: " <<  totalModularity;
-        outfileMG <<line.str();
+        gettimeofday(&endTime,NULL);
+		outfileMG <<line.str();
         outfileMG.close();
-        printAllCommunityNodeswithSingletons(g,bipartiteOriginalEntities);
+		double biLouvainAlgorithmTime = (endTime.tv_sec - startTime.tv_sec)*1000000 + (endTime.tv_usec - startTime.tv_usec);
+		printf("Only BiLovain Algorithm running time %f\n",biLouvainAlgorithmTime/1000000);
+        printAllCommunityNodeswithSingletons(g,bipartiteOriginalEntities, biLouvainAlgorithmTime);
         _communities.clear();
         delete[] nodesOrderExecution;
 }
@@ -1224,7 +1244,7 @@ void biLouvainMethod::printCoClusterCommunitiesFile()
 
 void biLouvainMethod::printAllCommunityNodes(Graph &g)
 {
-	std::string outputCommunities = "/../../dataset/" + _outputFileName + "_ResultsCommunities.txt";
+	std::string outputCommunities = "../../dataset/" + _outputFileName + "_ResultsCommunities.txt";
 	std::ofstream outfileC;
 	outfileC.open(outputCommunities.c_str(),std::ios::out|std::ios::trunc);
 	int singletonsV1 = 0 ;
@@ -1297,15 +1317,17 @@ std::string biLouvainMethod::listNodesCommunities(Graph &g)
 	return line.str().substr(0,line.str().length()-1);
 }
 
-void biLouvainMethod::printAllCommunityNodeswithSingletons(Graph &g,std::unordered_map<int,std::string> &bipartiteOriginalEntities)
+void biLouvainMethod::printAllCommunityNodeswithSingletons(Graph &g,std::unordered_map<int,std::string> &bipartiteOriginalEntities, double bilouvaintime)
 {
-	std::string outputCommunities = "../../dataset/" + _outputFileName + "_ResultsCommunities.txt";
+	std::string outputCommunities = "../../dataset/" + _outputFileName + "_biLouvain_Results.dat";
 	std::ofstream outfileC;
 	outfileC.open(outputCommunities.c_str(),std::ios::out|std::ios::trunc);
 	int singletonsV1 = 0 ;
 	int singletonsV2 = 0 ;
 	int cont = 0;
 	std::stringstream line;
+	std::cout << "----------------------------------------------------------" << "\n";
+	outfileC << "seconds " << bilouvaintime / 1000000 << "\n\n";
 	for(int i=0;i<_numberCommunities;i++)
 	{
 		if (!_communities[i].getNodes().empty())
@@ -1323,11 +1345,13 @@ void biLouvainMethod::printAllCommunityNodeswithSingletons(Graph &g,std::unorder
 						line << "Community " << cont++ << "[" << _communities[i].getDescription() << "]: " << g._graph[_communities[i].getNodes()[0]].getNodes()[0].getIdInput() << "\n";
 						
 					outfileC << line.str();
+					std::cout << line.str();
 				}
 				else
 				{
 					line.str("");
 					line << "Community " << cont++ << "[" << _communities[i].getDescription() << "]: ";
+					std::cout << line.str();
 					outfileC << line.str();
 					line.str("");
 					if(bipartiteOriginalEntities.size()>0)
@@ -1340,6 +1364,7 @@ void biLouvainMethod::printAllCommunityNodeswithSingletons(Graph &g,std::unorder
 						for(int k=0;k<g._graph[_communities[i].getNodes()[0]].getNumberNodes();k++)
                                                         line << g._graph[_communities[i].getNodes()[0]].getNodesSorted()[k].getIdInput() << ",";
 					}
+					std::cout << line.str().substr(0,line.str().length()-1) << "\n";
 					outfileC << line.str().substr(0,line.str().length()-1) << "\n";
 				}
 			}
@@ -1347,6 +1372,7 @@ void biLouvainMethod::printAllCommunityNodeswithSingletons(Graph &g,std::unorder
 			{
 				line.str("");
 				line << "Community " << cont++ << "[" << _communities[i].getDescription() << "]: ";
+				std::cout << line.str();
 				outfileC << line.str();
 				line.str("");
 				if(bipartiteOriginalEntities.size()>0)
@@ -1366,10 +1392,12 @@ void biLouvainMethod::printAllCommunityNodeswithSingletons(Graph &g,std::unorder
                                         }
 
 				}
+				std::cout << line.str().substr(0,line.str().length()-1) << "\n";
 				outfileC << line.str().substr(0,line.str().length()-1) << "\n";
 			}
 		}
 	}
+	std::cout << "----------------------------------------------------------" << "\n";
 	line.str("");
 	line << "\nSingletons Partition V1: " << singletonsV1;
 	outfileC << line.str();
@@ -1470,4 +1498,5 @@ void biLouvainMethod::printTimes(double biLouvainTime, double loadGraphTime, dou
 	printf("\nbiLouvain Gain Time PC Cj: %s",timeConverter(precalculationCjTime).c_str());
 	printf("\nbiLouvain Gain Time PC D: %s",timeConverter(precalculationDTime).c_str());
 	printf("\nPre Murata Time: %s\n",timeConverter(premurataTime).c_str());*/
+
 }

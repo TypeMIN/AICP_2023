@@ -1,9 +1,9 @@
 import ctypes
 import pathlib
+import os
 
-
-
-
-if __name__ == "__main__":
-	libname = pathlib.Path().absolute() / "biLouvain/"
-	c_lib = ctypes.CDLL(libname)
+def run(input_file):
+	input_file =  "../" + input_file
+	os.chdir('../algorithm/biLouvain')
+	os.system('./biLouvain -i {0} -d " " '.format(input_file))
+	return 0

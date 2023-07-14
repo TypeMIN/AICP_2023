@@ -178,7 +178,7 @@ void FuseMethod::fuseMethodCalculationMF(Graph &g, std::string outputFileName,do
 			finalModularity = fuseMethodInit(g);
                         gettimeofday(&endTime,NULL);
                         fuseTime = (endTime.tv_sec - startTime.tv_sec)*1000000 + (endTime.tv_usec - startTime.tv_usec);
-                        std::cout<<"\n ::: Fuse "<<finalModularity<<"\t"<<initialModularity<<"\t"<<g._lastIdPartitionV1+1<<"\t"<<g._numberNodes-(g._lastIdPartitionV1+1)<<"\t"<<g._numberNodes<<"\t"<<g._numberEdges<<"\t"<<fuseTime<<std::endl;
+                        // std::cout<<"\n ::: Fuse "<<finalModularity<<"\t"<<initialModularity<<"\t"<<g._lastIdPartitionV1+1<<"\t"<<g._numberNodes-(g._lastIdPartitionV1+1)<<"\t"<<g._numberNodes<<"\t"<<g._numberEdges<<"\t"<<fuseTime<<std::endl;
                 }
         }while((finalModularity - initialModularity) > cutoffFuse);
 	
@@ -247,7 +247,7 @@ void FuseMethod::fuseMethodCalculation(Graph &g, std::string outputFileName)
 	//printCommunitiesContributionModularity();
         outputFile.close();
 	fromCommunitiesToNodes(g);
-	std::cout<<"\n ::: Fuse "<<g._lastIdPartitionV1+1<<"\t"<<g._numberNodes-(g._lastIdPartitionV1+1)<<"\t"<<g._numberNodes<<std::endl;
+	// std::cout<<"\n ::: Fuse "<<g._lastIdPartitionV1+1<<"\t"<<g._numberNodes-(g._lastIdPartitionV1+1)<<"\t"<<g._numberNodes<<std::endl;
 	//for(int i=0;i<g._numberNodes;i++)
         //        std::cout << g._graph[i].getId()<< "\t" << g._graph[i].getDegreeNode()<<std::endl;
 }
@@ -299,7 +299,7 @@ void FuseMethod::initialCommunityDefinitionProvidedFileCommunities(Graph &g,cons
                 delete[] nodes;
                 initialCommunitiesFile.close();
 		fromCommunitiesToNodes(g);
-		std::cout<<"\n ::: Fuse "<<g._lastIdPartitionV1+1<<"\t"<<g._numberNodes-(g._lastIdPartitionV1+1)<<"\t"<<g._numberNodes<<std::endl;
+		// std::cout<<"\n ::: Fuse "<<g._lastIdPartitionV1+1<<"\t"<<g._numberNodes-(g._lastIdPartitionV1+1)<<"\t"<<g._numberNodes<<std::endl;
 	        //for(int i=0;i<g._numberNodes;i++)
                 //      std::cout << g._graph[i].getId()<< "\t" << g._graph[i].getDegreeNode()<<std::endl;
 		//return communitiesBetaFactor;
