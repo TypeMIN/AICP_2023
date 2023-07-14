@@ -5,6 +5,8 @@ import time
 import sys
 import reader
 import measure
+import numpy as np
+from scipy.sparse import coo_matrix
 
 sys.path.append("..")
 
@@ -98,10 +100,15 @@ print("output", output)
 # Global Parameter
 G = None
 C = None
+X = None
 #############################################################################
 # read network
-G = reader.readEdgeList(args.network)
-G.remove_edges_from(nx.selfloop_edges(G))
+if args.algorithm == 'spec':
+    a = np.loadtxt(args.network, delimiter=',', skiprows=1)
+    X = (coo_matrix((a[:, 2], (a[:, 0].astype(int), a[:, 1].astype(int))))).tocsr()
+else:
+    G = reader.readEdgeList(args.network)
+    G.remove_edges_from(nx.selfloop_edges(G))
 #############################################################################
 
 start_time = time.time()
@@ -135,7 +142,7 @@ elif args.algorithm == 'biLouvain':
     C = algorithm.bilouvain.run(args.network)
 
 elif args.algorithm == "spec":
-    C = algorithm.spec.run(args.network, args.c)
+    C = algorithm.spec.run(X, args.c)
 
 elif args.algorithm == 'LPAb':
     C = algorithm.LPAb.LPAb(G)
@@ -147,6 +154,17 @@ run_time = time.time() - start_time
 
 if args.algorithm == 'biLouvain':
     pass
+elif args.algorithm == "spec":
+    print('running time', run_time)
+    print("----------------------------------------------------------")
+    for i in range(args.c):
+        print("Clustering {0} : ".format(i), C.get_indices(i))
+    print("----------------------------------------------------------")
+    with open(output, 'w') as f:
+        f.write("seconds" + "\t" + str(run_time) + '\n')
+        for i in range(args.c):
+            f.write("Clustering {0} : ".format(i) + str(C.get_indices(i)) + '\n')
+    f.close()
 else :
     print('running time', run_time)
 
