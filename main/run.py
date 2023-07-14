@@ -15,6 +15,7 @@ import algorithm.bitruss
 import algorithm.bine
 import algorithm.deepcc
 import algorithm.biplex
+import algorithm.bilouvain
 
 sys.setrecursionlimit(10000)
 
@@ -43,7 +44,8 @@ def get_user_param(args_set, _alg):
     elif _alg == 'biplex':
         ret['k'] = args_set.k
         ret['t'] = args_set.t
-
+    elif _alg == "biLouvain":
+        ret['k'] = args_set.k
     return ret
 
 
@@ -118,6 +120,9 @@ elif args.algorithm == 'deepcc':
 
 elif args.algorithm == 'biplex':
     C = algorithm.biplex.run(G, args.k, args.t)
+
+elif args.algorithm == 'biLouvain':
+    C = algorithm.bilouvain.run(args.network)
 
 run_time = time.time() - start_time
 

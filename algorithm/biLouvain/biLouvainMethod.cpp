@@ -1223,7 +1223,7 @@ void biLouvainMethod::printCoClusterCommunitiesFile()
 
 void biLouvainMethod::printAllCommunityNodes(Graph &g)
 {
-	std::string outputCommunities = "/../../dataset/" + _outputFileName + "_ResultsCommunities.txt";
+	std::string outputCommunities = "../../dataset/" + _outputFileName + "_ResultsCommunities.txt";
 	std::ofstream outfileC;
 	outfileC.open(outputCommunities.c_str(),std::ios::out|std::ios::trunc);
 	int singletonsV1 = 0 ;
@@ -1452,6 +1452,7 @@ void biLouvainMethod::printTimes(double biLouvainTime, double loadGraphTime, dou
 	outfileTime << "\nbiLouvain Gain Time PC Cj: " + timeConverter(precalculationCjTime);
 	outfileTime << "\nbiLouvain Gain Time PC D: " + timeConverter(precalculationDTime);
 	outfileTime << "\nPre Murata Time: " + timeConverter(premurataTime);
+	printf("Only BiLovain Algorithm running time %f",biLouvainTime/1000000);
 	outfileTime.close();
 	/*printf("\n\n ::: Total Time: %s ::: %f microseconds\n",timeConverter(biLouvainTime+loadGraphTime).c_str(),biLouvainTime+loadGraphTime);
 	printf("\n\n ::: Load Graph Total Time: %s ::: %f microseconds\n",timeConverter(loadGraphTime).c_str(),loadGraphTime);
@@ -1469,4 +1470,5 @@ void biLouvainMethod::printTimes(double biLouvainTime, double loadGraphTime, dou
 	printf("\nbiLouvain Gain Time PC Cj: %s",timeConverter(precalculationCjTime).c_str());
 	printf("\nbiLouvain Gain Time PC D: %s",timeConverter(precalculationDTime).c_str());
 	printf("\nPre Murata Time: %s\n",timeConverter(premurataTime).c_str());*/
+
 }

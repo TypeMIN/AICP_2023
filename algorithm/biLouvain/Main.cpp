@@ -105,17 +105,20 @@ int main(int argc, char *argv[])
 				}
                         }
                         delete[] pieces;
-                        if(band == false)
-                        {
-				int pos = inputFileName.find_last_of(".");
-				bipartiteFileName = inputFileName.substr(0,pos)+"_bipartite.txt";
-				bipartiteOriginalEntities=PreProcessInputBipartiteGraph::preProcessingGraphData(inputFileName,delimiter);
-			}
-			else
-			{
-				bipartiteFileName = inputFileName;
-				bipartiteOriginalEntities=PreProcessInputBipartiteGraph::readDictionaryFile(inputFileName);
-			}
+            //             if(band == false)
+            //             {
+			// 	int pos = inputFileName.find_last_of(".");
+			// 	bipartiteFileName = inputFileName.substr(0,pos)+"_bipartite.txt";
+			// 	bipartiteOriginalEntities=PreProcessInputBipartiteGraph::preProcessingGraphData(inputFileName,delimiter);
+			// }
+			// else
+			// {
+			// 	bipartiteFileName = inputFileName;
+			// 	bipartiteOriginalEntities=PreProcessInputBipartiteGraph::readDictionaryFile(inputFileName);
+			// }
+			int pos = inputFileName.find_last_of(".");
+			bipartiteFileName = inputFileName.substr(0,pos)+"_bipartite.txt";
+			bipartiteOriginalEntities=PreProcessInputBipartiteGraph::preProcessingGraphData(inputFileName,delimiter);
 			double loadGraphTime = 0.0;
 			int pass = -1;
 			gettimeofday(&startTime,NULL);
@@ -157,7 +160,7 @@ int main(int argc, char *argv[])
                                 else if((fuse == 1)&&(initialCommunitiesFileName.empty()==false))
                                         f.initialCommunityDefinitionProvidedFileCommunities(*graph,initialCommunitiesFileName,alpha);
 				// std::cout << "\n ::: Starting biLouvain Algorithm :::";
-				gettimeofday(&startTime,NULL);							
+				gettimeofday(&startTime,NULL);
 				if(alpha != 0.0)
 					biLouvain.biLouvainMethodAlgorithm(*graph,cutoffIterations,cutoffPhases,optionOrder,bipartiteOriginalEntities,bipartiteFileName,outputFileName,alpha);
 				else
@@ -283,7 +286,7 @@ void parseCommandLine(const int argc, char * const argv[])
 			else
 				printf("Unknown Error-0x%08x\n",optopt);			
 			*/
-			// printUsage();
+			printUsage();
 			break;
 		    default:   
 			exit(0);
