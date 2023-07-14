@@ -18,7 +18,7 @@ import algorithm.biplex
 import algorithm.bilouvain
 import algorithm.LPAb
 import algorithm.LPAb_Plus
-
+import algorithm.spec
 
 sys.setrecursionlimit(10000)
 
@@ -47,8 +47,12 @@ def get_user_param(args_set, _alg):
     elif _alg == 'biplex':
         ret['k'] = args_set.k
         ret['t'] = args_set.t
+
     elif _alg == "biLouvain":
         ret['k'] = args_set.k
+
+    elif _alg == "spec":
+        ret['c'] = args_set.c
     return ret
 
 
@@ -59,6 +63,9 @@ parser.add_argument('--a', type=int, default=3,
 
 parser.add_argument('--b', type=int, default=3,
                     help='user parameter for abcore')
+
+parser.add_argument('--c', type=int, default=3,
+                    help='user parameter for spec')
 
 parser.add_argument('--k', type=int, default=2, help='user parameter for ktip, kwing, bitruss or biplex')
 
@@ -124,9 +131,11 @@ elif args.algorithm == 'deepcc':
 elif args.algorithm == 'biplex':
     C = algorithm.biplex.run(G, args.k, args.t)
 
-
 elif args.algorithm == 'biLouvain':
     C = algorithm.bilouvain.run(args.network)
+
+elif args.algorithm == "spec":
+    C = algorithm.spec.run(args.network, args.c)
 
 elif args.algorithm == 'LPAb':
     C = algorithm.LPAb.LPAb(G)
