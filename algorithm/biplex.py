@@ -41,9 +41,8 @@ def iMB_Basic(G, k, t, X, N_X, cand_p, cand_q):
                 print(new_X)
                 print(new_N_X)
             # Apply pruning strategies (Lemma 3 and Lemma 6)
-            # Lemma 3
-
-            # Lemma 6
+            # Lemma 3 about new_N_X
+            # Lemma 6 about new_cand_p
 
         if len(new_X) + len(new_cand_p) >= t and len(new_N_X) >= t:
             iMB_Basic(G, k, t, new_X, new_N_X, new_cand_p, cand_q)
