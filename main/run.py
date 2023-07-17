@@ -126,12 +126,14 @@ elif args.algorithm == 'bitruss':
     C = algorithm.bitruss.run(G, args.k)
 
 elif args.algorithm == 'bine':
+    import algorithm.bine
     # C = algorithm.bine.run()
     C = nx.connected_components(G)
     algorithm.bine.run()
 
 elif args.algorithm == 'deepcc':
     # C = algorithm.deepcc.run()
+    import algorithm.deepcc
     C = nx.connected_components(G)
     algorithm.deepcc.run()
 
