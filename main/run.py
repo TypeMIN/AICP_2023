@@ -127,9 +127,8 @@ elif args.algorithm == 'bitruss':
 
 elif args.algorithm == 'bine':
     import algorithm.bine
-    # C = algorithm.bine.run()
-    C = nx.connected_components(G)
-    algorithm.bine.run()
+    C = algorithm.bine.run(G, args.network)
+    print("")
 
 elif args.algorithm == 'deepcc':
     # C = algorithm.deepcc.run()
