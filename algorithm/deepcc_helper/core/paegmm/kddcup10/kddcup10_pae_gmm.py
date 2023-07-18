@@ -504,5 +504,5 @@ class KddcupPaeGmm:
 #         sio.savemat('.../DeepCC'+'_'+'coil20'+'_'+'prdlabel.mat', {'prd_lab':prd_lab, 'prd_lab_col':prd_lab_col})
 
         sess.close()
-        return RR_acc, RR_nmi
+        return RR_acc, RR_nmi, pred_label_kmeans_final
 

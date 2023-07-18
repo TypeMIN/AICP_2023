@@ -24,16 +24,19 @@ def run():
 
     accuracy     = []
     NMI          = []
+    pred_label_list = []
 
-    rounds = 10 # 10
-    epochs = 300 # 3000
-    epochs_pretrain = 100 # 1000
+    rounds = 1 # 10
+    epochs = 1 # 3000
+    epochs_pretrain = 1 # 1000
     for k in range(rounds):
         tf.compat.v1.reset_default_graph()
         machine = paegmm.KddcupPaeGmm(1024, num_clus_r, num_clus_c, ae_config, ae_col_config, gmm_config, 0)
         data = machine.get_data(filename)
-        acc, nmi = machine.run(data, epochs, epochs_pretrain)
+        acc, nmi, pred_label_list = machine.run(data, epochs, epochs_pretrain)
 
         accuracy      = np.append(accuracy, acc)
         NMI           = np.append(NMI, nmi)
+
+    print(pred_label_list)
     return 0
