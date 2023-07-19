@@ -39,4 +39,6 @@ def run():
         NMI           = np.append(NMI, nmi)
 
     print(pred_label_list)
+    for i in pred_label_list:
+        print(i)
     return 0

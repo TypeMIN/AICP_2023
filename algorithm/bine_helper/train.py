@@ -16,7 +16,8 @@ from sklearn import metrics
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import average_precision_score,auc,precision_recall_fscore_support
-
+from sklearn.cluster import DBSCAN
+import numpy as np
 
 def init_embedding_vectors(node_u, node_v, node_list_u, node_list_v, args):
     """
@@ -384,7 +385,19 @@ def train_by_sampling(args):
             break
         sys.stdout.write(s1)
         sys.stdout.flush()
-    save_to_file(node_list_u,node_list_v,model_path,args)
+    # save_to_file(node_list_u,node_list_v,model_path,args)
+
+    # start dbscan on args.vector_u, args.vector_v
+    X_lst = []
+    for u in node_list_u.keys():
+        X_lst.append(node_list_u[u]['embedding_vectors'].tolist()[0])
+    for v in node_list_v.keys():
+        X_lst.append(node_list_v[v]['embedding_vectors'].tolist()[0])
+    X = np.array(X_lst) # [u1, u2, ..., v1, v2, ...]
+    clustering = DBSCAN(eps=3, min_samples=2).fit(X)
+
+    return clustering.labels_
+
     print("")
     if args.rec:
         print("============== testing ===============")

@@ -37,7 +37,8 @@ class GraphUtils(object):
         with open(filename, encoding="UTF-8") as fin:
             line = fin.readline()
             while line:
-                user, item, rating = line.strip().split("\t")
+                user, item = line.split()
+                rating = 1
                 if self.edge_dict_u.get(user) is None:
                     self.edge_dict_u[user] = {}
                 if self.edge_dict_v.get(item) is None:
@@ -83,7 +84,7 @@ class GraphUtils(object):
                     self.authority_u[node] = (float(a[node])-min_a_u) / (max_a_u-min_a_u)
                 else:
                     self.authority_u[node] = 0
-            if node[0] == 'i':
+            if node[0] == 'v':
                 if max_a_v-min_a_v != 0:
                     self.authority_v[node] = (float(a[node])-min_a_v) / (max_a_v-min_a_v)
                 else:
