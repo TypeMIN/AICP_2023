@@ -1,6 +1,13 @@
-seconds	0.018000125885009766
-size	2.0
-num	3
-1 u 
-1 v 
-2 v 
+seconds	0.009216547012329102
+size	1.6
+num	10
+u1 v1 
+u2 v3 
+u3 v2 
+u4 v6 
+u5 
+u6 
+u7 v8 
+u8 v7 
+v4 
+v5 
