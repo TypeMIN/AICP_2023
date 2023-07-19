@@ -55,10 +55,16 @@ def LPAb(G):
 
         labels = new_labels
     # print(labels)
-    label_counts = Counter(labels.values())
-    most_common_label, _ = label_counts.most_common(1)[0]
-    most_common_nodes = [node for node, label in labels.items() if label == most_common_label]
-    return most_common_nodes
+    communities = {}
+    for node, label in labels.items():
+        if label in communities:
+            communities[label].add(node)
+        else:
+            communities[label] = {node}
+
+    # Only return non-empty communities
+    communities = [community for community in communities.values() if community]
+    return communities
 
 
 # # create a random bipartite graph

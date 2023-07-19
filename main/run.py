@@ -6,7 +6,7 @@ import sys
 import reader
 import measure
 import numpy as np
-from scipy.sparse import coo_matrix
+# from scipy.sparse import coo_matrix
 
 sys.path.append("..")
 
@@ -20,7 +20,7 @@ import algorithm.biplex
 import algorithm.bilouvain
 import algorithm.LPAb
 import algorithm.LPAb_Plus
-import algorithm.spec
+# import algorithm.spec
 
 sys.setrecursionlimit(10000)
 
@@ -76,7 +76,7 @@ parser.add_argument('--t', type=int, default=1, help='user parameter for k-biple
 parser.add_argument('--network', default="../dataset/alphabeta_sample.txt",
                     help='a folder name containing network.dat')
 
-parser.add_argument('--algorithm', default="LPAb_Plus",
+parser.add_argument('--algorithm', default="abcore",
                     help='specify algorithm name')
 
 args = parser.parse_args()
