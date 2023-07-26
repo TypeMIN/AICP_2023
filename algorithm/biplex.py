@@ -9,6 +9,7 @@ def iMB_Basic(G, k, t, X, N_X, cand_p, cand_q, total_graph):
         new_X = X.copy()
         new_X.append(u)
         new_cand_p = cand_p.copy()
+        new_cand_q = cand_q.copy()
 
         # make new_N_X
         new_N_X = list()
@@ -19,11 +20,27 @@ def iMB_Basic(G, k, t, X, N_X, cand_p, cand_q, total_graph):
                     count += 1
             if count >= len(new_X) - k:
                 new_N_X.append(v)
-        # Apply the early stop strategy
 
+        # Apply the early stop strategy (Lemma 2)
+        for vertex in cand_q:
+            if set(new_N_X).issubset(set(G.neighbors(vertex))):
+                # print("early stop")
+                new_cand_q.extend(cand_p)
+                new_cand_p.clear()
+                break
 
-        # Apply the advanced node expansion strategy
-
+        # # Apply the advanced node expansion (Lemma 4)
+        # for vertex in cand_p:
+        #     if set(new_N_X).issubset(set(G.neighbors(vertex))):
+        #         print("advanced node expansion")
+        #         print(u)
+        #         print(X)
+        #         print(new_X)
+        #         print(vertex)
+        #         new_X.append(vertex)
+        #         # new_cand_q.append(vertex) # 이거 넣어야 하나?
+        #         new_cand_p.remove(vertex)
+        #         # break
 
         if len(new_X) >= t:
             combo = combinations(new_N_X, t)
@@ -70,7 +87,7 @@ def iMB_Basic(G, k, t, X, N_X, cand_p, cand_q, total_graph):
                     total_graph.append(tem_G)
 
         if len(new_X) + len(new_cand_p) >= t and len(new_N_X) >= t:
-            new_cand_q = cand_q.copy()
+
             iMB_Basic(G, k, t, new_X, new_N_X, new_cand_p, new_cand_q, total_graph)
 
         cand_q.append(u)
@@ -97,8 +114,6 @@ def extract_number(s):
 
 def run(G_, k, t): #  t is threshold
     G = coreprune(G_.copy(), k, t)
-
-    print(nx.bipartite.sets(G))
 
     X, N_X, cand_p, cand_q = list(), list(), list(), list()
 
