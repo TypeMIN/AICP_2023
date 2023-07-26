@@ -3,89 +3,87 @@ import itertools
 
 # G is bipartite graph, k is biplex number, t is threshold, X is current node, N_X is extention set, cand_p is candidate of vertices in X, cand_q is vertices already visited
 # new_X is X`, new_N_X is extention set of X`, new_cand_p is cand_p(X`), new_cand_q is cand_q(X`)
-def iMB_Basic(G, k, t, X, N_X, cand_p, cand_q):
-
-    while(len(cand_p) != 0):
-        u = cand_p[0]
-        new_X = X.union({u})
-        cand_p.remove(u)
+def iMB_Basic(G, k, t, X, N_X, cand_p, cand_q, total_graph):
+    while (len(cand_p) > 0):
+        u = cand_p.pop(0)
+        new_X = X.copy()
+        new_X.append(u)
         new_cand_p = cand_p.copy()
-        new_N_X = set()
 
-        #  make extention set of new_X
+        # make new_N_X
+        new_N_X = list()
         for v in N_X:
             count = 0
-            for neighbor in G.neighbors(v):
-                if neighbor in new_X:
-                    count = count + 1
-            if count >= (len(new_X) - k) and count > 0: #  count > 0 인 조건을 넣어야 하나? len(new_X) - k 가 음수로 가면 new_N_X가 이상해진다.
-                new_N_X.add(v)
+            for vertex in G.neighbors(v):
+                if vertex in new_X:
+                    count += 1
+            if count >= len(new_X) - k:
+                new_N_X.append(v)
+        # Apply the early stop strategy
 
-        # Apply the early stop strategy (Lemma 2)
-        for vertex in cand_q:
-            if set(N_X).issubset(set(G.neighbors(vertex))):
-                # print("early stop")
-                cand_q = cand_q.union(new_cand_p)
-                new_cand_p.clear()
-                break
 
-        # Apply the advanced node expansion (Lemma 4)
-        for vertex in new_cand_p:
-            if set(new_N_X).issubset(set(G.neighbors(vertex))):
-                # print("advanced node expansion")
-                new_X.add(vertex)
-                # cand_q.add(vertex) # 이거 넣어야 하나?
-                new_cand_p.remove(vertex)
-                # break
+        # Apply the advanced node expansion strategy
+
 
         if len(new_X) >= t:
-            # print all graph make by new_X and y, y is subset of new_N_X and len(y) >= t
-            if len(new_N_X) >= t:
-                for r in range(t, len(new_N_X) + 1):
-                    for y in itertools.combinations(new_N_X, r):
-                        y = set(y)  # convert to set for easier operations
+            combo = combinations(new_N_X, t)
+            tem_X = list()
+            tem_N_X = list()
+            maximum_N_X = 0
+            for N_X_ in combo:
+                # maximum_X = 0
+                test = True
+                for vertex_u in new_X:
+                    count = 0
+                    for vertex_v in G.neighbors(vertex_u):
+                        if vertex_v in N_X_:
+                            count += 1
+                    if count < len(N_X_) - k:
+                        test = False
+                if test:
+                    if len(N_X_) > maximum_N_X:
+                        maximum_N_X = len(N_X_)
+                        tem_X = new_X.copy()
+                        tem_N_X = N_X_.copy()
+                    # list all MBs
 
-                        # Create a new bipartite graph with nodes new_X and y
-                        new_G = nx.Graph()
-                        new_G.add_nodes_from(new_X, bipartite=0)
-                        new_G.add_nodes_from(y, bipartite=1)
+            tem_G = G.copy()
+            node_to_remove = list()
+            for node in tem_G.nodes():
+                if node not in tem_X and node not in tem_N_X:
+                    node_to_remove.append(node)
 
-                        # Add edges that exist in the original graph G
-                        for u in new_X:
-                            for v in y:
-                                if G.has_edge(u, v):
-                                    new_G.add_edge(u, v)
-                        print(new_G.nodes())
-            # Lemma 6 about new_cand_p
-            # 만약 new_cand_p 에 있는 u 중 degree(u, Y) >= t - k에서   and len(new_N_X(X합u) >= t) 이면 new_X에 포함시키고 cand_p에서 제거
+            tem_G.remove_nodes_from(node_to_remove)
 
-            tem_N_X = set()
-            for u in new_cand_p:
-                for r in range(1, len(new_N_X) + 1):
-                    for y in itertools.combinations(new_N_X, r):
-                        y = set(y)
-                        count = 0
-                        for neighbor in G.neighbors(u):
-                            if neighbor in y:
-                                count = count + 1
-
-                        for v in new_N_X:
-                            tem_count = 0
-                            for neighbor in G.neighbors(v):
-                                if neighbor in new_X.union({u}):
-                                    tem_count = tem_count + 1
-                            if tem_count >= (len(new_X) - k) and count > 0:  # count > 0 인 조건을 넣어야 하나? len(new_X) - k 가 음수로 가면 new_N_X가 이상해진다.
-                                tem_N_X.add(v)
-                if count >= t - k and len(tem_N_X) >= t:
-                    new_X.add(u)
-                    new_cand_p.remove(u)
-            # Apply pruning strategies (Lemma 3 and Lemma 6)
-            # Lemma 3 about new_N_X
+            if len(total_graph) == 0:
+                total_graph.append(tem_G)
+            else:
+                test2 = True
+                for graph in total_graph:
+                    if is_subgraph(graph, tem_G) or is_subgraph(tem_G, graph): #graph가 tem_G의 sub
+                        test2 = False
+                        if len(graph.nodes) < len(tem_G.nodes):
+                            total_graph.remove(graph)
+                            total_graph.append(tem_G)
+                        break
+                if test2:
+                    total_graph.append(tem_G)
 
         if len(new_X) + len(new_cand_p) >= t and len(new_N_X) >= t:
-            iMB_Basic(G, k, t, new_X, new_N_X, new_cand_p, cand_q)
+            new_cand_q = cand_q.copy()
+            iMB_Basic(G, k, t, new_X, new_N_X, new_cand_p, new_cand_q, total_graph)
 
-        cand_q.add(u)
+        cand_q.append(u)
+
+def is_subgraph(S, G): #S is subgraph of G
+    if set(list(S.nodes)).issubset(list(G.nodes)) and set(list(S.edges)).issubset(list(G.edges)):
+        return True
+    return False
+def combinations(lst, t):
+    combos = []
+    for r in range(t, len(lst) + 1):
+        combos.extend(list(combo) for combo in itertools.combinations(lst, r))
+    return combos
 
 def coreprune(G_, k, t):
     G = G_.copy()
@@ -102,16 +100,19 @@ def run(G_, k, t): #  t is threshold
 
     print(nx.bipartite.sets(G))
 
-    X = set()  # 이게 X에 해당하는 vertices, 처음에는 비어있음
-    N_X = set(v for v, d in G.nodes(data=True) if d['bipartite'] == 1)  # 이게 Y에 해당하는 vertices, 처음에 모든 v로 채워둬야 됨
-    cand_p = set(u for u, d in G.nodes(data=True) if d['bipartite'] == 0)  # X에 들어갈 수 있는 vertices, 처음에 모든 u로 채워둬야 됨
-    cand_q = set()  # 이미 방문한 vertices
+    X, N_X, cand_p, cand_q = list(), list(), list(), list()
+
+    N_X = list(v for v, d in G.nodes(data=True) if d['bipartite'] == 1)
+    cand_p = list(u for u, d in G.nodes(data=True) if d['bipartite'] == 0)
 
     N_X = sorted(N_X, key=extract_number)  #sorting vertices
     cand_p = sorted(cand_p, key=extract_number)
 
-    iMB_Basic(G, k, t, X, N_X, cand_p, cand_q)
+    total_graph = list()
+    # total_graph.append(G)
 
-    return nx.connected_components(G)
+    iMB_Basic(G, k, t, X, N_X, cand_p, cand_q, total_graph)
+
+    return total_graph
 
 
