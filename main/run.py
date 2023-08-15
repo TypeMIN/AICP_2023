@@ -104,8 +104,25 @@ X = None
 #############################################################################
 # read network
 if args.algorithm == 'spec':
-    a = np.loadtxt(args.network, delimiter=',', skiprows=1)
-    X = (coo_matrix((a[:, 2], (a[:, 0].astype(int), a[:, 1].astype(int))))).tocsr()
+    with open(args.network, "r") as f:
+        lines = f.readlines()
+    edges = [tuple(line.strip().split()) for line in lines]
+
+    u_nodes = sorted(list(set([edge[0] for edge in edges])))
+    v_nodes = sorted(list(set([edge[1] for edge in edges])))
+
+    u_mapping = {node: index for index, node in enumerate(u_nodes)}
+    v_mapping = {node: index for index, node in enumerate(v_nodes)}
+
+    matrix = np.zeros((len(u_nodes), len(v_nodes)))
+
+    for edge in edges:
+        u_index = u_mapping[edge[0]]
+        v_index = v_mapping[edge[1]]
+        matrix[u_index][v_index] = 1
+
+    X = matrix
+
 else:
     G = reader.readEdgeList(args.network)
     G.remove_edges_from(nx.selfloop_edges(G))
@@ -158,13 +175,13 @@ if args.algorithm == 'biLouvain':
 elif args.algorithm == "spec":
     print('running time', run_time)
     print("----------------------------------------------------------")
-    for i in range(args.c):
-        print("Clustering {0} : ".format(i), C.get_indices(i))
+    print("Row labels (nodes from U):", C.row_labels_)
+    print("Column labels (nodes from V):", C.column_labels_)
     print("----------------------------------------------------------")
     with open(output, 'w') as f:
         f.write("seconds" + "\t" + str(run_time) + '\n')
-        for i in range(args.c):
-            f.write("Clustering {0} : ".format(i) + str(C.get_indices(i)) + '\n')
+        f.write("Row labels (nodes from U):" + str(C.row_labels_) + '\n')
+        f.write("Column labels (nodes from V):" + str(C.column_labels_) + '\n')
     f.close()
 else :
     print('running time', run_time)
