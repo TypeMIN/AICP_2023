@@ -14,13 +14,13 @@ import algorithm.abcore
 import algorithm.ktip
 import algorithm.kwing
 import algorithm.bitruss
-#import algorithm.bine
-#import algorithm.deepcc
+import algorithm.bine
+#import algorithm.deepcc 주석 풀면 에러발생
 import algorithm.biplex
 import algorithm.bilouvain
 import algorithm.LPAb
 import algorithm.LPAb_Plus
-# import algorithm.spec
+import algorithm.spec
 
 sys.setrecursionlimit(10000)
 
@@ -73,7 +73,7 @@ parser.add_argument('--k', type=int, default=2, help='user parameter for ktip, k
 
 parser.add_argument('--t', type=int, default=1, help='user parameter for k-biplex')
 
-parser.add_argument('--network', default="../dataset/alphabeta_sample.txt",
+parser.add_argument('--network', default="../dataset/graph34-re.txt",
                     help='a folder name containing network.dat')
 
 parser.add_argument('--algorithm', default="abcore",
