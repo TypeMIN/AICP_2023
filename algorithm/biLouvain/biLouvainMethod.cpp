@@ -1318,7 +1318,7 @@ std::string biLouvainMethod::listNodesCommunities(Graph &g)
 }
 
 void biLouvainMethod::printAllCommunityNodeswithSingletons(Graph &g,std::unordered_map<int,std::string> &bipartiteOriginalEntities, double bilouvaintime)
-{
+{	
 	std::string outputCommunities = _outputFileName + "_biLouvain_Results.dat";
 	std::ofstream outfileC;
 	outfileC.open(outputCommunities.c_str(),std::ios::out|std::ios::trunc);
@@ -1326,85 +1326,101 @@ void biLouvainMethod::printAllCommunityNodeswithSingletons(Graph &g,std::unorder
 	int singletonsV2 = 0 ;
 	int cont = 0;
 	std::stringstream line;
-	std::cout << "----------------------------------------------------------" << "\n";
+	std::cout << "\n----------------------------------------------------------" << "\n";
 	outfileC << "seconds " << bilouvaintime / 1000000 << "\n\n";
 	for(int i=0;i<_numberCommunities;i++)
 	{
 		if (!_communities[i].getNodes().empty())
 		{
-			if(_communities[i].getNumberNodes()==1)
-			{
-				if(g._graph[_communities[i].getNodes()[0]].getNumberNodes()==1)
-				{
-					if(_communities[i].getDescription() == "V1") singletonsV1++;
-					else singletonsV2++;
-					line.str("");
-					if(bipartiteOriginalEntities.size()>0)                                     
-						line << "Community " << cont++ << "[" << _communities[i].getDescription() << "]: " << bipartiteOriginalEntities[g._graph[_communities[i].getNodes()[0]].getNodes()[0].getIdInput()] << "\n";
-					else
-						line << "Community " << cont++ << "[" << _communities[i].getDescription() << "]: " << g._graph[_communities[i].getNodes()[0]].getNodes()[0].getIdInput() << "\n";
-						
-					outfileC << line.str();
-					std::cout << line.str();
-				}
-				else
-				{
-					line.str("");
-					line << "Community " << cont++ << "[" << _communities[i].getDescription() << "]: ";
-					std::cout << line.str();
-					outfileC << line.str();
-					line.str("");
-					if(bipartiteOriginalEntities.size()>0)
-					{
-						for(int k=0;k<g._graph[_communities[i].getNodes()[0]].getNumberNodes();k++)
-							line << bipartiteOriginalEntities[g._graph[_communities[i].getNodes()[0]].getNodesSorted()[k].getIdInput()] << ",";
-					}
-					else
-					{
-						for(int k=0;k<g._graph[_communities[i].getNodes()[0]].getNumberNodes();k++)
-                                                        line << g._graph[_communities[i].getNodes()[0]].getNodesSorted()[k].getIdInput() << ",";
-					}
-					std::cout << line.str().substr(0,line.str().length()-1) << "\n";
-					outfileC << line.str().substr(0,line.str().length()-1) << "\n";
-				}
-			}
-			else
-			{
-				line.str("");
-				line << "Community " << cont++ << "[" << _communities[i].getDescription() << "]: ";
-				std::cout << line.str();
-				outfileC << line.str();
+			if(_communities[i].getDescription() == "V1") {
 				line.str("");
 				if(bipartiteOriginalEntities.size()>0)
 				{
-					for(int j=0;j<_communities[i].getNumberNodes();j++)
-					{
-						for(int k=0;k<g._graph[_communities[i].getNodes()[j]].getNumberNodes();k++)
-							line << bipartiteOriginalEntities[g._graph[_communities[i].getNodes()[j]].getNodesSorted()[k].getIdInput()] << ",";
+					for(int k=0;k<g._graph[_communities[i].getNodes()[0]].getNumberNodes();k++)
+						line << bipartiteOriginalEntities[g._graph[_communities[i].getNodes()[0]].getNodesSorted()[k].getIdInput()] << " ";
+					int co = _communities[i].getCoClusterMateCommunityId().size() !=0? _communities[i].getCoClusterMateCommunityId()[0]: 0;
+					if (co != 0){
+						for(int k=0;k<g._graph[_communities[co].getNodes()[0]].getNumberNodes();k++)
+							line << bipartiteOriginalEntities[g._graph[_communities[co].getNodes()[0]].getNodesSorted()[k].getIdInput()] << " ";
 					}
-				}
-				else
-				{
-					for(int j=0;j<_communities[i].getNumberNodes();j++)
-                                        {
-                                                for(int k=0;k<g._graph[_communities[i].getNodes()[j]].getNumberNodes();k++)
-                                                        line << g._graph[_communities[i].getNodes()[j]].getNodesSorted()[k].getIdInput() << ",";
-                                        }
-
+					
 				}
 				std::cout << line.str().substr(0,line.str().length()-1) << "\n";
 				outfileC << line.str().substr(0,line.str().length()-1) << "\n";
 			}
+			// if(_communities[i].getNumberNodes()==1)
+			// {
+				// if(g._graph[_communities[i].getNodes()[0]].getNumberNodes()==1)
+				// {
+				// 	if(_communities[i].getDescription() == "V1") singletonsV1++;
+				// 	else singletonsV2++;
+				// 	line.str("");
+				// 	if(bipartiteOriginalEntities.size()>0)                                     
+				// 		line << "Community " << cont++ << "[" << _communities[i].getDescription() << "]: " << bipartiteOriginalEntities[g._graph[_communities[i].getNodes()[0]].getNodes()[0].getIdInput()] << "\n";
+				// 	else
+				// 		line << "Community " << cont++ << "[" << _communities[i].getDescription() << "]: " << g._graph[_communities[i].getNodes()[0]].getNodes()[0].getIdInput() << "\n";
+						
+				// 	outfileC << line.str();
+				// 	std::cout << line.str();
+				// }
+				// else
+				// {
+				// 	line.str("");
+				// 	line << "Community " << cont++ << "[" << _communities[i].getDescription() << "]: " << _communities[i].getCoClusterMateCommunityId().size();
+				// 	std::cout << line.str();
+				// 	outfileC << line.str();
+				// 	line.str("");
+				// 	if(bipartiteOriginalEntities.size()>0)
+				// 	{
+				// 		for(int k=0;k<g._graph[_communities[i].getNodes()[0]].getNumberNodes();k++)
+				// 			line << bipartiteOriginalEntities[g._graph[_communities[i].getNodes()[0]].getNodesSorted()[k].getIdInput()] << ",";
+				// 	}
+				// 	else
+				// 	{
+				// 		for(int k=0;k<g._graph[_communities[i].getNodes()[0]].getNumberNodes();k++)
+                //                                         line << g._graph[_communities[i].getNodes()[0]].getNodesSorted()[k].getIdInput() << ",";
+				// 	}
+				// 	std::cout << line.str().substr(0,line.str().length()-1) << "\n";
+				// 	outfileC << line.str().substr(0,line.str().length()-1) << "\n";
+				// }
+			// }
+			// else
+			// {
+			// 	line.str("");
+			// 	line << "Community " << cont++ << "[" << _communities[i].getDescription() << "]: ";
+			// 	std::cout << line.str();
+			// 	outfileC << line.str();
+			// 	line.str("");
+			// 	if(bipartiteOriginalEntities.size()>0)
+			// 	{
+			// 		for(int j=0;j<_communities[i].getNumberNodes();j++)
+			// 		{
+			// 			for(int k=0;k<g._graph[_communities[i].getNodes()[j]].getNumberNodes();k++)
+			// 				line << bipartiteOriginalEntities[g._graph[_communities[i].getNodes()[j]].getNodesSorted()[k].getIdInput()] << ",";
+			// 		}
+			// 	}
+			// 	else
+			// 	{
+			// 		for(int j=0;j<_communities[i].getNumberNodes();j++)
+            //                             {
+            //                                     for(int k=0;k<g._graph[_communities[i].getNodes()[j]].getNumberNodes();k++)
+            //                                             line << g._graph[_communities[i].getNodes()[j]].getNodesSorted()[k].getIdInput() << ",";
+            //                             }
+
+			// 	}
+			// 	std::cout << line.str().substr(0,line.str().length()-1) << "\n";
+			// 	outfileC << line.str().substr(0,line.str().length()-1) << "\n";
+			// }
 		}
 	}
 	std::cout << "----------------------------------------------------------" << "\n";
-	line.str("");
-	line << "\nSingletons Partition V1: " << singletonsV1;
-	outfileC << line.str();
-	line.str("");
-	line << "\nSingletons Partition V2: " << singletonsV2 << "\n";
-	outfileC << line.str();
-	outfileC << listNodesCommunities(g);
+	// line.str("");
+	// line << "\nSingletons Partition V1: " << singletonsV1;
+	// outfileC << line.str();
+	// line.str("");
+	// line << "\nSingletons Partition V2: " << singletonsV2 << "\n";
+	// outfileC << line.str();
+	// outfileC << listNodesCommunities(g);
 	outfileC.close();
 }
 
