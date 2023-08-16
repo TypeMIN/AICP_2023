@@ -174,14 +174,20 @@ if args.algorithm == 'biLouvain':
     pass
 elif args.algorithm == "spec":
     print('running time', run_time)
-    print("----------------------------------------------------------")
-    print("Row labels (nodes from U):", C.row_labels_)
-    print("Column labels (nodes from V):", C.column_labels_)
-    print("----------------------------------------------------------")
+    U_max = max(list(C.row_labels_))
+    V_max = max(list(C.column_labels_))
+    total_max = max(U_max, V_max)
     with open(output, 'w') as f:
-        f.write("seconds" + "\t" + str(run_time) + '\n')
-        f.write("Row labels (nodes from U):" + str(C.row_labels_) + '\n')
-        f.write("Column labels (nodes from V):" + str(C.column_labels_) + '\n')
+        f.write("seconds" + "\t" + str(run_time) + '\n' +'\n')
+        print("----------------------------------------------------------")
+        for i in range(total_max+1):
+            U_matching = ["u" + str(j+1) for j, value in enumerate(list(C.row_labels_)) if value == i]
+            V_matching = ["v" + str(j+1) for j, value in enumerate(list(C.column_labels_)) if value == i]
+            total_matching = U_matching + V_matching
+            result = " ".join(total_matching)
+            print(result)
+            f.write(result + '\n')
+        print("----------------------------------------------------------")
     f.close()
 else :
     print('running time', run_time)
