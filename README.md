@@ -1,3 +1,2 @@
-# AICP_2023
-## 데이터유람단
-Bipartite Cohesive Subgraph Discovery in Networks
+# AICP_2023 (데이터 유람단)
+## Bipartite Cohesive Subgraph Discovery in Networks
