@@ -394,7 +394,9 @@ def train_by_sampling(args):
     for v in node_list_v.keys():
         X_lst.append(node_list_v[v]['embedding_vectors'].tolist()[0])
     X = np.array(X_lst) # [u1, u2, ..., v1, v2, ...]
-    clustering = DBSCAN(eps=3, min_samples=2).fit(X)
+    clustering = DBSCAN(eps=128, min_samples=3).fit(X)
+
+    print('\n', X)
 
     return clustering.labels_
 
