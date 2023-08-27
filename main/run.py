@@ -85,7 +85,8 @@ print("algorithm ", args.algorithm)
 
 user_params = get_user_param(args, args.algorithm)
 
-output = get_base(args.network)
+output = "../result/"
+output = output + args.network.split("/")[-1].split(".")[0] + "_"
 output = output + args.algorithm
 for key in user_params.keys():
     print("params ", key, user_params[key])
@@ -177,7 +178,12 @@ elif args.algorithm == "spec":
     U_max = max(list(C.row_labels_))
     V_max = max(list(C.column_labels_))
     total_max = max(U_max, V_max)
+    vertex_density, edge_density, graph_density, barbers_modularity = measure.get_evaluation(G, C)
     with open(output, 'w') as f:
+        f.write("vertex_density" + "\t" + str(vertex_density) + '\n')
+        f.write("edge_density" + "\t" + str(edge_density) + '\n')
+        f.write("graph_density" + "\t" + str(graph_density) + '\n')
+        f.write("barbers_modularity" + "\t" + str(barbers_modularity) + '\n')
         f.write("seconds" + "\t" + str(run_time) + '\n' +'\n')
         print("----------------------------------------------------------")
         for i in range(total_max+1):
@@ -206,7 +212,12 @@ else :
     size, num = measure.get_result(G, result)
     print("resultant_statistic ", run_time, size, num)
 
+    vertex_density, edge_density, graph_density, barbers_modularity = measure.get_evaluation(G, result)
     with open(output, 'w') as f:
+        f.write("vertex_density" + "\t" + str(vertex_density) + '\n')
+        f.write("edge_density" + "\t" + str(edge_density) + '\n')
+        f.write("graph_density" + "\t" + str(graph_density) + '\n')
+        f.write("barbers_modularity" + "\t" + str(barbers_modularity) + '\n')
         f.write("seconds" + "\t" + str(run_time) + '\n')
         f.write("size" + "\t" + str(size) + '\n')
         f.write("num" + "\t" + str(num) + '\n')
