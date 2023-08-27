@@ -12,6 +12,8 @@ def get_average_size(G, C):
     csum = 0
     for c in C:
         csum += len(c)
+    if cnum == 0:
+        return 0
     return csum/cnum
 
 def get_number_of_cc(G, C):

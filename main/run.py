@@ -148,10 +148,8 @@ elif args.algorithm == 'bine':
     print("")
 
 elif args.algorithm == 'deepcc':
-    # C = algorithm.deepcc.run()
     import algorithm.deepcc
-    C = nx.connected_components(G)
-    algorithm.deepcc.run()
+    C = algorithm.deepcc.run(G)
 
 elif args.algorithm == 'biplex':
     C = algorithm.biplex.run(G, args.k, args.t)
