@@ -23,20 +23,29 @@ def get_number_of_cc(G, C):
     return len(C)
 
 def get_vertex_density(G, C):
-    U, V = nx.bipartite.sets(G)
-    E = G.number_of_edges()
-    density = E/(len(U)*len(V))**(1/2)
+    density = []
+    S = [G.subgraph(c).copy() for c in C]
+    for s in S:
+        U, V = nx.bipartite.sets(s)
+        E = s.number_of_edges()
+        density.append(E/(len(U)*len(V))**(1/2))
     return density
 
 def get_edge_density(G, C):
-    U, V = nx.bipartite.sets(G)
-    E = G.number_of_edges()
-    density = E/(len(U)+len(V))
+    density = []
+    S = [G.subgraph(c).copy() for c in C]
+    for s in S:
+        U, V = nx.bipartite.sets(s)
+        E = s.number_of_edges()
+        density.append(E/(len(U)+len(V)))
     return density
 def get_graph_density(G, C):
-    U, V = nx.bipartite.sets(G)
-    E = G.number_of_edges()
-    density = E/(len(U)*len(V))
+    density = []
+    S = [G.subgraph(c).copy() for c in C]
+    for s in S:
+        U, V = nx.bipartite.sets(s)
+        E = s.number_of_edges()
+        density.append(E/(len(U)*len(V)))
     return density
 
 def get_barbers_modularity(G, C):
