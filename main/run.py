@@ -15,7 +15,7 @@ import algorithm.ktip
 import algorithm.kwing
 import algorithm.bitruss
 import algorithm.bine
-#import algorithm.deepcc 주석 풀면 에러발생
+#import algorithm.deepcc
 import algorithm.biplex
 import algorithm.bilouvain
 import algorithm.LPAb

@@ -49,5 +49,14 @@ def get_graph_density(G, C):
     return density
 
 def get_barbers_modularity(G, C):
-    density = 0
+    density = []
+    n = G.number_of_nodes()
+    m = G.number_of_edges()
+    S = [G.subgraph(c).copy() for c in C]
+    for s in S:
+        U, V = nx.bipartite.sets(s)
+        R_c = len(U)
+        B_C = len(V)
+        m_c = s.number_of_edges()
+        density.append((m_c/m) - (R_c * B_C)/(m**2))
     return density
