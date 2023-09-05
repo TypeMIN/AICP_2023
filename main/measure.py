@@ -23,33 +23,36 @@ def get_number_of_cc(G, C):
     return len(C)
 
 def get_vertex_density(G, C):
-    density = []
+    density_list = []
     S = [G.subgraph(c).copy() for c in C]
     for s in S:
         U, V = nx.bipartite.sets(s)
         E = s.number_of_edges()
-        density.append(E/(len(U)*len(V))**(1/2))
+        density_list.append(E/(len(U)*len(V))**(1/2))
+    density = sum(density_list) / len(density_list)
     return density
 
 def get_edge_density(G, C):
-    density = []
+    density_list = []
     S = [G.subgraph(c).copy() for c in C]
     for s in S:
         U, V = nx.bipartite.sets(s)
         E = s.number_of_edges()
-        density.append(E/(len(U)+len(V)))
+        density_list.append(E/(len(U)+len(V)))
+    density = sum(density_list) / len(density_list)
     return density
 def get_graph_density(G, C):
-    density = []
+    density_list = []
     S = [G.subgraph(c).copy() for c in C]
     for s in S:
         U, V = nx.bipartite.sets(s)
         E = s.number_of_edges()
-        density.append(E/(len(U)*len(V)))
+        density_list.append(E/(len(U)*len(V)))
+    density = sum(density_list) / len(density_list)
     return density
 
 def get_barbers_modularity(G, C):
-    density = []
+    modularity_list = []
     n = G.number_of_nodes()
     m = G.number_of_edges()
     S = [G.subgraph(c).copy() for c in C]
@@ -58,5 +61,6 @@ def get_barbers_modularity(G, C):
         R_c = len(U)
         B_C = len(V)
         m_c = s.number_of_edges()
-        density.append((m_c/m) - (R_c * B_C)/(m**2))
-    return density
+        modularity_list.append((m_c/m) - (R_c * B_C)/(m**2))
+    modularity = sum(modularity_list) / len(modularity_list)
+    return modularity
