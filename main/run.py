@@ -73,7 +73,7 @@ parser.add_argument('--k', type=int, default=2, help='user parameter for ktip, k
 
 parser.add_argument('--t', type=int, default=1, help='user parameter for k-biplex')
 
-parser.add_argument('--network', default="../dataset/bnoc1.txt",
+parser.add_argument('--network', default="../dataset/bnoc/bnoc1.txt",
                     help='a folder name containing network.dat')
 
 parser.add_argument('--algorithm', default="abcore",
