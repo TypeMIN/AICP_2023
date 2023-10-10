@@ -73,7 +73,7 @@ parser.add_argument('--k', type=int, default=2, help='user parameter for ktip, k
 
 parser.add_argument('--t', type=int, default=1, help='user parameter for k-biplex')
 
-parser.add_argument('--network', default="../dataset/graph34-re.txt",
+parser.add_argument('--network', default="../dataset/bnoc1.txt",
                     help='a folder name containing network.dat')
 
 parser.add_argument('--algorithm', default="abcore",
@@ -124,15 +124,15 @@ if args.algorithm == 'spec':
 
     X = matrix
 
-else:
-    G = reader.readEdgeList(args.network)
-    G.remove_edges_from(nx.selfloop_edges(G))
+G = reader.readEdgeList(args.network)
+G.remove_edges_from(nx.selfloop_edges(G))
+G.remove_nodes_from(list(nx.isolates(G)))
 #############################################################################
 
 start_time = time.time()
 
 if args.algorithm == 'abcore':
-    C =  algorithm.abcore.run(G, args.a, args.b)
+    C = algorithm.abcore.run(G, args.a, args.b)
 
 elif args.algorithm == 'ktip':
     C = algorithm.ktip.run(G, args.k)
@@ -159,7 +159,7 @@ elif args.algorithm == 'biLouvain':
     C = algorithm.bilouvain.run(args.network)
 
 elif args.algorithm == "spec":
-    C = algorithm.spec.run(X, args.c)
+    C = algorithm.spec.run(G, X, args.c)
 
 elif args.algorithm == 'LPAb':
     C = algorithm.LPAb.LPAb(G)
@@ -171,28 +171,28 @@ run_time = time.time() - start_time
 
 if args.algorithm == 'biLouvain':
     pass
-elif args.algorithm == "spec":
-    print('running time', run_time)
-    U_max = max(list(C.row_labels_))
-    V_max = max(list(C.column_labels_))
-    total_max = max(U_max, V_max)
-    vertex_density, edge_density, graph_density, barbers_modularity = measure.get_evaluation(G, C)
-    with open(output, 'w') as f:
-        f.write("vertex_density" + "\t" + str(vertex_density) + '\n')
-        f.write("edge_density" + "\t" + str(edge_density) + '\n')
-        f.write("graph_density" + "\t" + str(graph_density) + '\n')
-        f.write("barbers_modularity" + "\t" + str(barbers_modularity) + '\n')
-        f.write("seconds" + "\t" + str(run_time) + '\n' +'\n')
-        print("----------------------------------------------------------")
-        for i in range(total_max+1):
-            U_matching = ["u" + str(j+1) for j, value in enumerate(list(C.row_labels_)) if value == i]
-            V_matching = ["v" + str(j+1) for j, value in enumerate(list(C.column_labels_)) if value == i]
-            total_matching = U_matching + V_matching
-            result = " ".join(total_matching)
-            print(result)
-            f.write(result + '\n')
-        print("----------------------------------------------------------")
-    f.close()
+# elif args.algorithm == "spec":
+#     print('running time', run_time)
+#     U_max = max(list(C.row_labels_))
+#     V_max = max(list(C.column_labels_))
+#     total_max = max(U_max, V_max)
+#     # vertex_density, edge_density, graph_density, barbers_modularity = measure.get_evaluation(G, C)
+#     with open(output, 'w') as f:
+#         # f.write("vertex_density" + "\t" + str(vertex_density) + '\n')
+#         # f.write("edge_density" + "\t" + str(edge_density) + '\n')
+#         # f.write("graph_density" + "\t" + str(graph_density) + '\n')
+#         # f.write("barbers_modularity" + "\t" + str(barbers_modularity) + '\n')
+#         f.write("seconds" + "\t" + str(run_time) + '\n' +'\n')
+#         print("----------------------------------------------------------")
+#         for i in range(total_max+1):
+#             U_matching = ["u" + str(j+1) for j, value in enumerate(list(C.row_labels_)) if value == i]
+#             V_matching = ["v" + str(j+1) for j, value in enumerate(list(C.column_labels_)) if value == i]
+#             total_matching = U_matching + V_matching
+#             result = " ".join(total_matching)
+#             print(result)
+#             f.write(result + '\n')
+#         print("----------------------------------------------------------")
+#     f.close()
 else :
     print('running time', run_time)
 

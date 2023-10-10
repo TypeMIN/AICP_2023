@@ -28,13 +28,15 @@ def find_nodes_at_distance_2(node, graph):
 	result = list(set(distance_2_nodes))
 	return counts, result
 
-def  run(G, k):
+def run(G, k):
 	"""
 	find the number of butterflies each vertex u in U participates
 	:param U: list of each vertex
 	:param G: bipartite Graph
 	:return: the dictionary that is the number of butterflies each vertex
 	"""
+	G.remove_nodes_from(list(nx.isolates(G)))
+	print(nx.is_connected(G))
 	I,U = bipartite.sets(G)
 	D = []
 	betas = {}

@@ -6,6 +6,7 @@ import numpy as np
 # from sklearn.utils import check_random_state
 # from coclust.visualization import plot_cluster_sizes
 from sklearn.cluster import SpectralCoclustering
+import networkx as nx
 
 # class CustomCoclustSpecMod(BaseDiagonalCoclust):
 # 	"""Co-clustering by spectral approximation of the modularity matrix.
@@ -130,17 +131,27 @@ from sklearn.cluster import SpectralCoclustering
 # 		self.row_labels_ = k_means_labels[0:nb_rows].tolist()
 # 		self.column_labels_ = k_means_labels[nb_rows:].tolist()
 
-def run(X, n_clust):
-	model = SpectralCoclustering(n_clusters=n_clust, random_state = 0)
+def run(G_, X, n_clust):
+	G = G_.copy()
+	model = SpectralCoclustering(n_clusters=n_clust, random_state=0)
 
 	# model = CustomCoclustSpecMod(n_clusters=n_clust, random_state=0)
 	model.fit(X)
-	return  model
+	print(model.row_labels_)
+	print(model.column_labels_)
 
-if __name__=="__main__":
-	X = np.array([[1, 1], [2, 1], [1, 0],
-	              [4, 7], [3, 5], [3, 6]])
-	model = SpectralCoclustering(n_clusters=3, random_state = 0)
-	model.fit(X)
-	print("Row labels (nodes from U):", model.row_labels_)
-	print("Column labels (nodes from V):", model.column_labels_)
+	print(G)
+	# remove nodes which are not in the model from G
+	for node in list(G.nodes()):
+		for i in len(model.row_labels_):
+			if node not in model.row_labels_[i]:
+				G.remove_node(node)
+
+	# remove edges which are not in the model from G
+	for edge in list(G.edges()):
+		if edge[0] not in model.row_labels_ or edge[1] not in model.row_labels_:
+			G.remove_edge(edge[0], edge[1])
+
+	print(G)
+	return nx.connected_components(G)
+	######################
