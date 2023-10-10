@@ -134,24 +134,12 @@ import networkx as nx
 def run(G_, X, n_clust):
 	G = G_.copy()
 	model = SpectralCoclustering(n_clusters=n_clust, random_state=0)
-
+	return model.fit(X)
 	# model = CustomCoclustSpecMod(n_clusters=n_clust, random_state=0)
 	model.fit(X)
 	print(model.row_labels_)
 	print(model.column_labels_)
 
-	print(G)
-	# remove nodes which are not in the model from G
-	for node in list(G.nodes()):
-		for i in len(model.row_labels_):
-			if node not in model.row_labels_[i]:
-				G.remove_node(node)
 
-	# remove edges which are not in the model from G
-	for edge in list(G.edges()):
-		if edge[0] not in model.row_labels_ or edge[1] not in model.row_labels_:
-			G.remove_edge(edge[0], edge[1])
+	# implement G with only model nodes
 
-	print(G)
-	return nx.connected_components(G)
-	######################

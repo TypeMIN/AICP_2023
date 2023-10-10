@@ -127,6 +127,7 @@ if args.algorithm == 'spec':
 G = reader.readEdgeList(args.network)
 G.remove_edges_from(nx.selfloop_edges(G))
 G.remove_nodes_from(list(nx.isolates(G)))
+print(G)
 #############################################################################
 
 start_time = time.time()
@@ -171,28 +172,45 @@ run_time = time.time() - start_time
 
 if args.algorithm == 'biLouvain':
     pass
-# elif args.algorithm == "spec":
-#     print('running time', run_time)
-#     U_max = max(list(C.row_labels_))
-#     V_max = max(list(C.column_labels_))
-#     total_max = max(U_max, V_max)
-#     # vertex_density, edge_density, graph_density, barbers_modularity = measure.get_evaluation(G, C)
-#     with open(output, 'w') as f:
-#         # f.write("vertex_density" + "\t" + str(vertex_density) + '\n')
-#         # f.write("edge_density" + "\t" + str(edge_density) + '\n')
-#         # f.write("graph_density" + "\t" + str(graph_density) + '\n')
-#         # f.write("barbers_modularity" + "\t" + str(barbers_modularity) + '\n')
-#         f.write("seconds" + "\t" + str(run_time) + '\n' +'\n')
-#         print("----------------------------------------------------------")
-#         for i in range(total_max+1):
-#             U_matching = ["u" + str(j+1) for j, value in enumerate(list(C.row_labels_)) if value == i]
-#             V_matching = ["v" + str(j+1) for j, value in enumerate(list(C.column_labels_)) if value == i]
-#             total_matching = U_matching + V_matching
-#             result = " ".join(total_matching)
-#             print(result)
-#             f.write(result + '\n')
-#         print("----------------------------------------------------------")
-#     f.close()
+elif args.algorithm == "spec":
+    print('running time', run_time)
+    U_max = max(list(C.row_labels_))
+    V_max = max(list(C.column_labels_))
+    total_max = max(U_max, V_max)
+    # vertex_density, edge_density, graph_density, barbers_modularity = measure.get_evaluation(G, C)
+    with open(output, 'w') as f:
+        # f.write("vertex_density" + "\t" + str(vertex_density) + '\n')
+        # f.write("edge_density" + "\t" + str(edge_density) + '\n')
+        # f.write("graph_density" + "\t" + str(graph_density) + '\n')
+        # f.write("barbers_modularity" + "\t" + str(barbers_modularity) + '\n')
+        f.write("seconds" + "\t" + str(run_time) + '\n' +'\n')
+        print("----------------------------------------------------------")
+        for i in range(total_max+1):
+            U_matching = ["u" + str(j+1) for j, value in enumerate(list(C.row_labels_)) if value == i]
+            V_matching = ["v" + str(j+1) for j, value in enumerate(list(C.column_labels_)) if value == i]
+            total_matching = U_matching + V_matching
+            result = " ".join(total_matching)
+            # remove nodes which are not in the matching from G
+            G_copy = G.copy()
+            G_copy.remove_nodes_from([node for node in G.nodes() if node not in total_matching])
+            print(G_copy)
+            # # vertex density
+            # U, V = nx.bipartite.sets(G)
+            # E = G.number_of_edges()
+            # vertex_density = E / (len(U) * len(V)) ** (1 / 2)
+            # # edge density
+            # E = G.number_of_edges()
+            # edge_density = E / (len(U) + len(V))
+            # # graph density
+            # E = G.number_of_edges()
+            # graph_density = E / (len(U) * len(V))
+            # # barbers modularity
+            # barbers_modularity = measure.get_barbers_modularity(G, [list(G.nodes())])
+            # print(vertex_density, edge_density, graph_density, barbers_modularity)
+            print(result)
+            f.write(result + '\n')
+        print("----------------------------------------------------------")
+    f.close()
 else :
     print('running time', run_time)
 

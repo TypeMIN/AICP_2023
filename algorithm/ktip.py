@@ -36,7 +36,6 @@ def run(G, k):
 	:return: the dictionary that is the number of butterflies each vertex
 	"""
 	G.remove_nodes_from(list(nx.isolates(G)))
-	print(nx.is_connected(G))
 	I,U = bipartite.sets(G)
 	D = []
 	betas = {}
