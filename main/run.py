@@ -190,10 +190,13 @@ elif args.algorithm == "spec":
             V_matching = ["v" + str(j+1) for j, value in enumerate(list(C.column_labels_)) if value == i]
             total_matching = U_matching + V_matching
             result = " ".join(total_matching)
-            # remove nodes which are not in the matching from G
-            G_copy = G.copy()
-            G_copy.remove_nodes_from([node for node in G.nodes() if node not in total_matching])
+            # find subgrpah of G with nodes in the total_matching
+            G_copy = G.subgraph(total_matching)
             print(G_copy)
+            # remove nodes which are not in the matching from G
+            # G_copy = G.copy()
+            # G_copy.remove_nodes_from([node for node in G.nodes() if node not in total_matching])
+            # print(G_copy)
             # # vertex density
             # U, V = nx.bipartite.sets(G)
             # E = G.number_of_edges()
