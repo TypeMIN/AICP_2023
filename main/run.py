@@ -247,6 +247,9 @@ else :
             for u in list(comp):
                 f.write(str(u) + " ")
             f.write("\n")
+    f.close()
 
+    with open("../statistic.csv", 'a') as f:
+        f.write(args.network.split("/")[-1].split(".")[0] + "," + args.algorithm + "," + str(vertex_density) + "," + str(edge_density) + "," + str(graph_density) + "," + str(barbers_modularity) + "," + str(run_time) + "," + str(size) + "," + str(num) + "\n")
     f.close()
 

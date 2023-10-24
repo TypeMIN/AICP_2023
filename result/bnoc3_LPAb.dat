@@ -1,0 +1,40 @@
+vertex_density	1.351675496635683
+edge_density	0.6647907647907648
+graph_density	0.9941077441077442
+barbers_modularity	0.012907562014704861
+seconds	2.9857966899871826
+size	2.787878787878788
+num	33
+u0 u1 v50 
+u2 u6 u8 v53 v54 v55 
+u3 u4 v56 
+u5 v57 
+u26 u9 v58 
+u10 v71 
+u11 v81 
+u12 v59 
+u13 u18 u20 v61 v63 
+u14 v65 
+u15 u30 v62 v86 
+u16 v84 
+u17 u31 v82 v83 
+u19 v64 
+u21 v67 v69 
+u22 v74 
+u23 v77 
+u24 v73 
+u25 v78 
+u27 v75 v76 
+u28 v72 
+u29 v79 v80 
+u32 v85 
+u33 v87 
+u34 u35 u36 u39 v60 v88 v90 
+u38 v89 
+u40 u43 v91 v94 
+u41 u42 v93 
+u44 v92 
+u45 v98 
+u46 v99 
+u47 u49 v95 
+u48 v68 

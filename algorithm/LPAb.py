@@ -63,7 +63,7 @@ def LPAb(G):
             communities[label] = {node}
 
     # Only return non-empty communities
-    communities = [community for community in communities.values() if community]
+    communities = [community for community in communities.values() if community and len(community) > 1]
     return communities
 
 
