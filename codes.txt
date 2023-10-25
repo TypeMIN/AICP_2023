@@ -5,7 +5,7 @@ python run.py --algorithm "abcore" --a 4 --b 3 --network "../dataset/bnoc/bnoc4.
 python run.py --algorithm "abcore" --a 6 --b 3 --network "../dataset/bnoc/bnoc5.txt"
 python run.py --algorithm "abcore" --a 6 --b 3 --network "../dataset/bnoc/bnoc6.txt"
 python run.py --algorithm "abcore" --a 6 --b 3 --network "../dataset/bnoc/bnoc7.txt"
-python run.py --algorithm "abcore" --a 6 --b 3 --network "../dataset/bnoc/bnoc8.txt"
+python run.py --algorithm "abcore" --a 2 --b 2 --network "../dataset/konect/american_revolution.txt"
 
 
 아직 k가 너무 작음 (7에서 최대가 14)
@@ -16,7 +16,8 @@ python run.py --algorithm "ktip" --k 14 --network "../dataset/bnoc/bnoc4.txt"
 python run.py --algorithm "ktip" --k 14 --network "../dataset/bnoc/bnoc5.txt"
 python run.py --algorithm "ktip" --k 14 --network "../dataset/bnoc/bnoc6.txt"
 python run.py --algorithm "ktip" --k 14 --network "../dataset/bnoc/bnoc7.txt"
-python run.py --algorithm "ktip" --k 14 --network "../dataset/bnoc/bnoc8.txt"
+python run.py --algorithm "ktip" --k 14 --network "../dataset/konect/american_revolution.txt"
+
 
 
 k 4일듯? 근데 시간복잡도 조정이 필요할지도 모름
@@ -27,7 +28,8 @@ python run.py --algorithm "kwing" --k 4 --network "../dataset/bnoc/bnoc4.txt"
 python run.py --algorithm "kwing" --k 4 --network "../dataset/bnoc/bnoc5.txt"
 python run.py --algorithm "kwing" --k 4 --network "../dataset/bnoc/bnoc6.txt"
 python run.py --algorithm "kwing" --k 4 --network "../dataset/bnoc/bnoc7.txt"
-python run.py --algorithm "kwing" --k 4 --network "../dataset/bnoc/bnoc8.txt"
+python run.py --algorithm "kwing" --k 4 --network "../dataset/konect/american_revolution.txt"
+
 
 python run.py --algorithm "bitruss" --k 4 --network "../dataset/bnoc/bnoc1.txt"
 python run.py --algorithm "bitruss" --k 4 --network "../dataset/bnoc/bnoc2.txt"
@@ -36,7 +38,8 @@ python run.py --algorithm "bitruss" --k 4 --network "../dataset/bnoc/bnoc4.txt"
 python run.py --algorithm "bitruss" --k 4 --network "../dataset/bnoc/bnoc5.txt"
 python run.py --algorithm "bitruss" --k 4 --network "../dataset/bnoc/bnoc6.txt"
 python run.py --algorithm "bitruss" --k 4 --network "../dataset/bnoc/bnoc7.txt"
-python run.py --algorithm "bitruss" --k 4 --network "../dataset/bnoc/bnoc8.txt"
+python run.py --algorithm "bitruss" --k 4 --network "../dataset/konect/american_revolution.txt"
+
 
 
 python run.py --algorithm "LPAb" --network "../dataset/bnoc/bnoc1.txt"
@@ -46,7 +49,8 @@ python run.py --algorithm "LPAb" --network "../dataset/bnoc/bnoc4.txt"
 python run.py --algorithm "LPAb" --network "../dataset/bnoc/bnoc5.txt"
 python run.py --algorithm "LPAb" --network "../dataset/bnoc/bnoc6.txt"
 python run.py --algorithm "LPAb" --network "../dataset/bnoc/bnoc7.txt"
-python run.py --algorithm "LPAb" --network "../dataset/bnoc/bnoc8.txt"
+python run.py --algorithm "LPAb" --network "../dataset/konect/american_revolution.txt"
+
 
 python run.py --algorithm "LPAb_Plus" --network "../dataset/bnoc/bnoc1.txt"
 python run.py --algorithm "LPAb_Plus" --network "../dataset/bnoc/bnoc2.txt"
@@ -55,7 +59,8 @@ python run.py --algorithm "LPAb_Plus" --network "../dataset/bnoc/bnoc4.txt"
 python run.py --algorithm "LPAb_Plus" --network "../dataset/bnoc/bnoc5.txt"
 python run.py --algorithm "LPAb_Plus" --network "../dataset/bnoc/bnoc6.txt"
 python run.py --algorithm "LPAb_Plus" --network "../dataset/bnoc/bnoc7.txt"
-python run.py --algorithm "LPAb_Plus" --network "../dataset/bnoc/bnoc8.txt"
+python run.py --algorithm "LPAb_Plus" --network "../dataset/konect/american_revolution.txt"
+
 
 
 python run.py --algorithm "biLouvain" --network "../dataset/bnoc/bnoc1.txt"
